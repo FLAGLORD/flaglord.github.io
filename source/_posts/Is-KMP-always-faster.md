@@ -1,14 +1,20 @@
 ---
 title: Is KMP always faster?
 date: 2021-09-07 17:21:37
-tags:
+tags: [KMP, algorithm, C++]
 ---
 
-```c++
-//
-// Created by 朱益成 on 2021/8/30.
-//
+本文比对了 KMP 以及  C++ `string` 的`find`方法在检查 a 是否为 b 子串这一问题上的效率。
 
+尽管字符串长度已经达到了  10<sup>4</sup> 这一量级，但是在 test case 数量为 10<sup>5</sup> 时，KMP 表现仍没有`find`好.
+
+首先，毫无疑问，从时间复杂度上分析，KMP 确实胜于 `find`的暴力匹配，但是 KMP 会在 build next table 上花费比较多的时间，在字符串长度仍不够大时，并无法体现它的优势。
+
+同时在我的测试情景中，next 表 Build 完毕后只会在一个测试用例中使用，无疑是浪费了。
+
+而`find`方法只所以实现上采用暴力匹配，也是因为其使用于更 common 的场景，而 KMP 也需要分配额外的内存来进行 next 表的构建
+
+```c++
 #include <iostream>
 #include <string>
 #include <regex>

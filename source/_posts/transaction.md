@@ -202,7 +202,7 @@ InnoDB 经常提到的三种锁：
 
 举一些例子[^5]，假设表拥有`id`值为[5, 10, 11, 13, 20]的行，以下语句
 
-```mysql
+```sql
 SELECT * FROM child WHERE id = 13 FOR UPDATE;
 ```
 
@@ -210,7 +210,7 @@ search 使事务会持有 (11, 13] 的 Next-Key lock 以及 gap lock (13,  20)
 
 而以下语句
 
-```mysql
+```sql
 SELECT * FROM child WHERE id > 15 FOR UPDATE;
 ```
 
