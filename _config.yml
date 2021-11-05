@@ -108,5 +108,4 @@ deploy:
   type: git
   repository: 
     github: git@github.com:FLAGLORD/flaglord.github.io.git
-    coding: git@e.coding.net:flaglord/flaglord/flaglord.git  #你的仓库地址
   branch: master
