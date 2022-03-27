@@ -1,0 +1,574 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Rickicon2.ico">
+  <link rel="icon" href="/img/Rickicon2.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="google-site-verification" content="2LnXQIXdhJV_gy8RXbAXgNcNzhllQC_Me3_qlIIkC3I" /> <meta name="baidu-site-verification" content="code-Y5g1WZqiGT" />
+  
+  <title>Kubernetes网络学习整理 - Flaglord</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"flaglord.com","root":"/","version":"1.8.9a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":6},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Flaglord's Space</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/banner.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Kubernetes网络学习整理">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-05-26 16:21" pubdate>
+        2021年5月26日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.8k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      43
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Kubernetes网络学习整理</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2022年3月26日 下午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h1 id="Docker-网络模型"><a href="#Docker-网络模型" class="headerlink" title="Docker 网络模型"></a>Docker 网络模型</h1><p>四大模式：</p>
+<ul>
+<li><strong>Host</strong>: 容器不会虚拟出自己的网卡，配置自己的IP，而是使用宿主机的 IP 和端口。容器与宿主机共享同一 Network Namespace，<em>优点是网络性能好，但是缺点是网络隔离性差，容器网络栈如果崩溃会影响到宿主机，同时会受到宿主机端口使用数量以及占用状况的限制（端口冲突问题）</em></li>
+<li><strong>Container</strong>: 指定新创建的容器加入已经存在的某一个容器的 Network Namespace</li>
+<li><strong>None</strong>: 容器有独立的 Network Namespace, 但并没有对其进行过任何网络设置</li>
+<li><strong>bridge</strong>: 默认工作模式</li>
+</ul>
+<h2 id="bridge-详解"><a href="#bridge-详解" class="headerlink" title="bridge 详解"></a><span id="jump">bridge 详解</span></h2><p>核心词：<strong>Veth Pair</strong>,<strong>bridge</strong>,<strong>172.xx.xx.xx</strong></p>
+<p>宿主机会创建名为 docker0 的网桥，容器通过 Veth Pair连接到网桥上。网桥的工作方式与交换机类似，这样宿主机上的容器就可以通过网桥连接在一个二层网络中。</p>
+<p>Docker 会从 RFC1918 定义的私有 IP 网段中选择一个网段来供 docker0 以及容器使用。Docker 一般会使用 172.17.0.0/16 这个网段，并将 172.16.0.1/16 分配给 docker0 网桥（当然这个网段可以在 Docker Daemon启动时通过<code>--bip=CDIR</code>自行配置）。</p>
+<p>由于容器 Network Namespace 与宿主机隔离，所以容器是看不到 docker0 这个设备的。为了与同宿主机的其他容器通信，docker 会创建一对 veth pair,它组成一个数据通道，一段放在新创建的容器中，命名为 eth0,另一端在宿主机中，名字的形式一般为 vethxxx,并将该设备加入到 docker0 网桥中，docker 会为 eth0 从前文提到的172.17.0.0/16 选取一个未被占用的 ip 进行设置 ，同时容器的默认网关会设置成 docker0 的 ip 地址（即 172.17.0.1），即访问非本机容器网段会经过 docker0 网关进行转发，而同主机（同网段）之间通过广播通信（route 中可以看到一条 Gateway 0.0.0.0 的记录，表示其不需要路由）。</p>
+<p>因为 docker0 以及容器的 IP是私网 IP，在外部网络上不能使用，所以想要和外部世界通信需要用到<strong>NAT</strong>(Network Address Translation).容器想要访问外部世界，需要采用 SNAT 来借用宿主机的 IP 去访问，而容器如果对外界提供服务，则采用 DNAT ，使用宿主机的端口通过 iptable 或者别的某些机制，将流导入到容器上。在这里，可以认为 linux 主机发挥了交换机的功能。</p>
+<h2 id="Docker-网络的优劣分析"><a href="#Docker-网络的优劣分析" class="headerlink" title="Docker 网络的优劣分析"></a>Docker 网络的优劣分析</h2><p>Docker 的网络模型比较简单，即内部的网桥 + 内部的保留 IP，从而做到容器网络和外部世界的解耦。然而这样做，外部网络难以区分哪些是容器的网络与流量，哪些是宿主机的网络与容量，如果要做一个高可用，172.16.1.1 和 176.16.1.2 是拥有同样功能的容器，我们需要将两者绑成一个 Group 对外提供服务，而从外部来看两者没有什么相同之处，因为它们会借用宿主机的 IP 和端口。</p>
+<p><strong>原生</strong> Docker 网络模型是单主机模式，默认配置下，不同宿主机上的容器无法通过 IP 互相访问，而大规模容器部署势必涉及不同主机的网络通信。Docker 一方面将 SocketPlane 整合至其集群管理项目 Swarm 中，另一方面将网络管理从 Docker Daemon 中独立出来形成 Libnetwork 并提供多种网络驱动以及允许第三方网络管理工具以插件形式来替代内置的网络功能（接口是 CNM）,以两者作为跨主机通信的解决方案</p>
+<h1 id="Kubernetes-网络模型"><a href="#Kubernetes-网络模型" class="headerlink" title="Kubernetes 网络模型"></a>Kubernetes 网络模型</h1><p><strong>perPodperIp</strong>:即每一个 Pod 都有独立的 IP,Pod 内所有容器共享同一 Network Namespace.</p>
+<p>相比于 docker, 在 kubernetes 中 ，容器可以直接通信：① Pod内直接通过 localhost ② Pod 与 Pod 间容器可以通过 IP。这样不仅避免了 NAT 带来的性能损耗，还可以追溯源地址，降低了网络排错的难度。</p>
+<p>K8s 对如何实现这样一个网络模型并未做限制，所以各自方案也比较多。</p>
+<h2 id="容器跨主机网络"><a href="#容器跨主机网络" class="headerlink" title="容器跨主机网络"></a>容器跨主机网络</h2><p>可以从 Flannel 项目来理解跨主网络的主流实现方法，其支持三种实现：</p>
+<ol>
+<li><strong>VXLAN</strong></li>
+<li><strong>UDP</strong></li>
+<li><strong>host-gw</strong></li>
+</ol>
+<p>flannel 基本模型是集群使用一个网段，每个 node 从网段上划分一个子网，而在主机上为容器创建网络时，再从子网上划分一个 IP 给容器。这个模型跟 k8s 的 perPodperIp 模型契合得非常好</p>
+<p>docker 上各个节点的容器  IP 地址是所属节点自动分配的，从全局上来看就像是不同小区的门牌号，在更大的范围上来观察就可能是重复的（每个主机上都有 172.16.0.2/16）。flannel 在 k8s  中使用 etcd 存储网段和节点的映射关系，然后再在各个节点上进行配置，确保节点只从分配到的网段中给容器分配 IP 地址。</p>
+<p>仅仅地址不重复，网络仍无法联通。因为通常虚拟网络的 IP 和 MAC 地址在物理网络上是不认识的（why?），所以即使发送到网络中，也无法进行路由。所有 flannel  早期的实现方式是 overlay，即隧道网络，下面提到的 UDP 和 VXLAN 都属于 overlay，而 host-gateway则是路由，它是第二种解决容器网络地址路由的方法.</p>
+<h3 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h3><p>关键设备：<strong>TUN（tunnel）设备</strong>：它可以在操作系统内核以及用户应用程序之间传递网络包</p>
+<p>Node 1的 Container-1发向 Node  2的 Container-2 的网络包进入网桥并出现在宿主机上后，Flannel 已经在宿主机上创建了一系列路由规则，网络包会依据规则进入 flannel0 设备（tun设备），它会将 网络包发往用户态的 flanneld 进程，flanneld 可以根据目的 IP 地址匹配到对应的子网（做一下 mask 就行了），在 etcd 中可以找到子网对应的宿主机 IP 地址，将原 IP 包（为什么是IP包：因为tun 是在网络层工作的设备）封装成 UDP 包发向目标宿主机，这个 UDP 的源地址便是宿主机 Node 1的地址。</p>
+<p>每个宿主机的 flanneld 都会监听 8285 端口，因此只要 udp 包的目的端口是8285，Node 2 的 flanned 便会收到包并解析出封装在其中的原 IP 包，并发送给 Node 2的 flannel0 设备，此时内核会处理这个 IP 包，依据路由规则转发给网桥，而网桥会扮演二层交换机的角色，将数据包发送给正确的端口，通过 veth pair 最终送达目标容器。</p>
+<p>UDP 性能比较糟糕，因为有三次用户态与内核态的数据复制，上下文切换的开销和多次数据复制令它性能饱受诟病</p>
+<h3 id="VXLAN"><a href="#VXLAN" class="headerlink" title="VXLAN"></a>VXLAN</h3><p>VXLAN 在内核实现解封装功能，从而相比于 UDP 极大地改善了性能</p>
+<p>VXLAN 在宿主机上设置的特殊设备为 <strong>VTEP（VXLAN tunnel end  point,虚拟隧道端点）</strong>，它解封转的对象为二层数据帧（Ethernet frame）</p>
+<p>假设 Container-1(IP 地址 10.1.15.2)要访问 Container-2(IP 地址为10.1.16.3).Container-1 发出的包出现在网桥，会被路由到本机的 flannel.1设备(VTEP)进行处理,这里是隧道的入口。</p>
+<p>当 Node2启动后并加入网络中，各个节点包括 Node 1上的 flannel 进程会添加一条路由规则，凡是发往 Node 2网段的 IP 包，都需要经由 flannel.1 设备发出，并且最后发向的网关地址正是 node-2 上 flannel.1 设备的 IP 地址。（这个地址是否是 flannel.1 的 IP 地址存疑，我看到一些书的 example 中这个 IP 地址很特殊,正好是 10.1.16.0/24,正好是分配到的子网号+主机号置为0的结果，但是查询下面的ARP记录获得的 mac 地址的确是 node 2 上 flannel.1 的 mac 地址 ）</p>
+<p>对于隧道入口的包，要想发送往另一端需要加上目的地的 mac 地址，封装成二层数据帧进行发送。现在路由记录已经告知了 node 2 VTEP 设备的 IP 地址，需要用到 ARP 表根据三层 IP 地址查询对应的 IP 地址。而这里用到的 ARP 记录，同样是 node 2 加入时由 flanneld 进程自动添加到节点 node 1 上的。（这里并没有依赖 L3 MISS 事件以及 ARP 学习）。</p>
+<p>VTEP 的 MAC 地址对于宿主机网络来说没有什么实际意义，所以目前封装的数据帧仍无法在宿主机二层网络里传播。接下来需要将它当做内部数据帧进一步封装成宿主机网络中的普通数据帧，通过宿主机的 eth0 网卡进行传输。内核会在内部数据帧前加上特殊的 VXLAN 头，VXLAN 头有一个 VNI 标志，它是 VTEP 设备识别某个数据帧是否应该由自己处理的标识，而在 flannel 中，这个默认值是1，这也是宿主机 VTEP 设备叫做 flannel.1 的原因。加上特殊的头后，内核将其装进 UDP 包进行发送。</p>
+<p>通过 UDP 包进行发送需要知道目标宿主机的 IP 地址。在这种情况下， flannel.1设备扮演“网桥”的角色，其转发的依据来自于 <strong>FDB（forwarding database）</strong>，<em>这里是使用 node 2 的 VTEP 设备的 mac 地址去查询的</em>.FDB 信息同样是由 flanneld 进程负责维护。有了 ip 地址，再将 nod 2 的 mac 地址填进去便封装完毕（这个 mac 地址不需要 flanneld 来维护，可以通过 ARP 学习获得）</p>
+<p>发送后的包来到 Node 2的 eth0 网卡，内核网络栈会发现数据帧有 VXLAN Header 且 VNI = 1,所以 Linux 会对它进行拆包 ，获取内部数据帧，并依据 VNI交给 node 2 上的 flannel.1设备。flannel.1 设备会进一步拆包，取出“原始 IP 包”，并依据前面 UDP 中提到的流程进行处理，最终送达。</p>
+<h3 id="host-gw"><a href="#host-gw" class="headerlink" title="host-gw"></a>host-gw</h3><p>上面提到 Host-gw 是一种路由方案，其工作原理就是将下一跳设置为所要访问的 POD 所在宿主机的 IP 地址（这个 IP 地址不是 flannel 分配的，而是宿主机的 Public IP）,即目的主机会充当这条容器访问路径的网关</p>
+<p>举例说明，假设 Node-1(IP : 10.168.0.2/24)上的 container-1(IP : 10.244.0.2)要访问 Node-2 (IP : 10.168.0.3/24)上的 container-2(IP : 10.244.1.3)，flannel 的 host-gw 模式会在宿主机创建一条路由规则：目的地址属于 10.244.1.0/24 网段的 IP 包经过本机 eth0 设备发出，且下一跳（Gateway）为 10.168.0.3, 即Node-2的 IP 地址。有了下一跳地址，当 IP 包在链路层封装时会使用 Node-2 的 MAC 地址，这样数据包就能成功地从 Node-1 送往 Node-2</p>
+<p>而Node-2 内核栈从二层数据帧中获取 IP 包后，会注意到 IP 目的地址为 10.244.1.3，而Node-2将会有以下一条路由规则：目的地址属于 10.244.1.0/24 网段的 IP 包会交给 cni0 网桥进行处理，从而进入 container-2.</p>
+<p>在这里 ,flanneld 做的事情是 WATCH etcd 中主机和子网映射信息的变化来及时更新路由表。</p>
+<p>这种模式免除了额外封包和解包带来的性能损耗，性能损失在 10% 左右，而其他基于 VXLAN 机制的网络方案大概在 20%-30%</p>
+<p>host-gw 对底层网络有一定要求，即集群宿主机之间是二层连通的，所以如果宿主机分布在不同的子网，它们 IP 上是可通的（Node1 所在的 VLAN 的 router 可以连接 Node2所在 VLAN 的 router），但由于二层不通，即使拥有 Node-2 的 mac 地址，而在 Node-1所在的 VLAN 里是找不到它的。</p>
+<p>一个直观的想法可能是干脆在 Node1 上添加到 Node2 网段（10.244.1.0/24，注意这不是个 Public IP）经由 router-1的路由规则，router-1中添加到 Node2 网段经由 router-2 的路由规则，以此类推来添加下一跳路由，最终转发到 Node2中。虽然通过 BGP 是有可能达成的，但是在 k8s 广泛使用的公有云场景中却不行 ，因为我们可以设置宿主机的路由表，但是公有云宿主机之间的网关不允许用户随意干预设置。</p>
+<h3 id="补充：-Calico"><a href="#补充：-Calico" class="headerlink" title="补充： Calico"></a>补充： Calico</h3><p>Calico 像 Flannel host-gw 一样是一个三层网络方案，实际上，其实现几乎是跟 Flannel host-gw 完全一样。不过 Flannel 使用 etcd 和 宿主机上的 flanneld 进程维护路由信息，而 Calico 则是使用 BGP 协议。</p>
+<p>需要注意的是 Calico 中没有使用网桥，因此宿主机上需要添加以下一条路由规则：</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-symbol">CONTAINER</span>-<span class="hljs-built_in">IP</span> dev calixxxx scope link<br></code></pre></td></tr></table></figure>
+
+<p>意思是发往宿主机上某容器的 IP 包应该进入 calixxxx 设备，而 calixxxx 正是 veth  pair 在 host 的一端。</p>
+<p>而当容器包想要发送时会走默认路由</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">default</span> via <span class="hljs-number">169.254.1.1</span> dev eth<span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
+
+<p>veth pair 一端的数据确实会从另一端出来，然而回忆一下，在<a href="#jump">详解 bridge</a>中容器默认网关的 IP 地址是网桥的 IP 地址，这个 169.254.1.1 又是谁的呢？</p>
+<p>实际上 Calico 并没有真正把 169.254.1.1 这个 IP 分配给谁，这里使用到了<code>proxy_arp</code>功能，开启后 host 会响应所有的 ARP 请求，即使这个 IP 地址并非属于自己。如此，容器和主机网络才算打通。</p>
+<p>Calico 还提供了 IPIP 工作模式，其是为了解决在 host-gw 末尾提到的那种情况，多了解封包的步骤，其性能与 VXLAN 大致相仿。</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>从我的角度来看，UDP 和 VXLAN 方案通过封装将包伪装成宿主机之间的普通 UDP 包，又提供了某种机制来识别其实际为容器通信包的身份，如 UDP 中目的宿主机 flanneld 会监听 8285 端口来保证它会获取到这个容器通信包，然后交给 TUN 设备进行处理；而在 VXLAN 中则是使用内核提供的 VXLAN 机制 ，通过 VNI 交给 flannel 的 VTEP 设备来处理。</p>
+<p>host-gw 作为路由方案其思路更为直接：容器 IP 不能在其他地方识别路由，那我直接把包交给能识别它的、容器所在的宿主机，以它来作为网关就行了。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Kubernetes/">Kubernetes</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/06/26/Goland%E8%BF%9E%E6%8E%A5VMWARE/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Goland连接VMWARE</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/04/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%A7%88/">
+                        <span class="hidden-mobile">小话分布式系统——从 3W 出发（一）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.lazyComments('waline', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/@waline/client@0.14.8/dist/Waline.min.js', function () {
+        new Waline({
+          el: "#waline",
+          placeholder: "说点什么",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: true,
+          serverURL: "https://imnerd-api-steel.vercel.app/",
+          avatarCDN: "",
+          avatarForce: false,
+          requiredFields: [],
+          emojiCDN: "",
+          emojiMaps: {},
+          anonymous: null,
+        });
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the
+    <a target="_blank" href="https://waline.js.org" rel="nofollow noopener noopener">comments powered by Waline.</a>
+  </noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

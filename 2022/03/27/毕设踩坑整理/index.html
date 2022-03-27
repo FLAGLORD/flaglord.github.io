@@ -1,0 +1,565 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Rickicon2.ico">
+  <link rel="icon" href="/img/Rickicon2.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="google-site-verification" content="2LnXQIXdhJV_gy8RXbAXgNcNzhllQC_Me3_qlIIkC3I" /> <meta name="baidu-site-verification" content="code-Y5g1WZqiGT" />
+  
+  <title>毕设踩坑整理 - Flaglord</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"flaglord.com","root":"/","version":"1.8.9a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":6},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Flaglord's Space</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/banner.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="毕设踩坑整理">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-03-27 16:04" pubdate>
+        2022年3月27日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.7k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      22
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">毕设踩坑整理</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2022年3月27日 晚上
+                
+              </p>
+            
+            <div class="markdown-body">
+              <p>说是踩坑，实际上只是整理我在毕设中遇到的一些问题和解决方案，不过不知道以后还有没有再写 flask 的机会……</p>
+<p>此外写毕设的一个感触就是，往往构思的时间要比实际写代码的时间要多得多。同时，自己可能由于过分想要避免重复造轮子，而且总是想找到解决某个问题的 best practice，常常过分纠结于工具的选择，而浪费了大量的时间，实际上一些比较小的问题，自己动手去做个适配，或者撸个轮子能够很好 work 就可以了。</p>
+<h2 id="CSS-tricks"><a href="#CSS-tricks" class="headerlink" title="CSS tricks"></a>CSS tricks</h2><p>用得最多的应该是<code>margin-left: auto</code>，自动居右</p>
+<h2 id="前后端"><a href="#前后端" class="headerlink" title="前后端"></a>前后端</h2><h3 id="python-删除目录"><a href="#python-删除目录" class="headerlink" title="python 删除目录"></a>python 删除目录</h3><p>可以使用 <code>shutil.rmtree(path)</code>，不过缺点是有时你只是想删除目录中的内容，而非将目录本身也删去。虽然可以选择重新创建目录，但是如果目录是在挂载在 Docker 中可能会出现一些问题，所以我的做法是</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">clear_dir</span>(<span class="hljs-params">folder</span>):</span><br>    <span class="hljs-keyword">for</span> root, dirs, files <span class="hljs-keyword">in</span> os.walk(folder, topdown=<span class="hljs-literal">False</span>):<br>        <span class="hljs-keyword">for</span> name <span class="hljs-keyword">in</span> files:<br>            os.remove(os.path.join(root, name))<br>        <span class="hljs-keyword">for</span> name <span class="hljs-keyword">in</span> dirs:<br>            os.rmdir(os.path.join(root, name))<br></code></pre></td></tr></table></figure>
+
+<p><code>topdown=False</code>是因为<code>rmdir()</code>需要目录为空，可以参考相关文档<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="https://docs.python.org/3/library/os.html#os.walk]
+">[1]</span></a></sup></p>
+<h3 id="前后端下载文件"><a href="#前后端下载文件" class="headerlink" title="前后端下载文件"></a>前后端下载文件</h3><h4 id="前端下载文件"><a href="#前端下载文件" class="headerlink" title="前端下载文件"></a>前端下载文件</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs javascript">axios(&#123;<br>  url: <span class="hljs-string">&#x27;http://localhost:5000/static/example.pdf&#x27;</span>,<br>  method: <span class="hljs-string">&#x27;GET&#x27;</span>,<br>  responseType: <span class="hljs-string">&#x27;blob&#x27;</span>, <span class="hljs-comment">// important</span><br>&#125;).then(<span class="hljs-function">(<span class="hljs-params">response</span>) =&gt;</span> &#123;<br>  <span class="hljs-keyword">const</span> url = <span class="hljs-built_in">window</span>.URL.createObjectURL(<span class="hljs-keyword">new</span> Blob([response.data]));<br>  <span class="hljs-keyword">const</span> link = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;a&#x27;</span>);<br>  link.href = url;<br>  link.setAttribute(<span class="hljs-string">&#x27;download&#x27;</span>, <span class="hljs-string">&#x27;file.pdf&#x27;</span>);<br>  <span class="hljs-built_in">document</span>.body.appendChild(link);<br>  link.click();<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p>我在 SO 搜索时看到很多人推荐 file-saver，其对浏览器的兼容性更好，但是据作者所言，其更加适用于 client-side 的文件（即直接在浏览器端生成的文件），如果想要下载后的文件是以后端给出的 filename 命名的话，有一些麻烦。</p>
+<p>如果希望下载后的文件是以后端给出的 filename 命名的话，可以在 Response 中指定 <code>content-disposition</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">return</span> Response(data, headers=&#123;<br>    <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/zip&#x27;</span>,<br>    <span class="hljs-string">&#x27;content-disposition&#x27;</span>: <span class="hljs-string">&#x27;attachment; filename=%s;&#x27;</span> % zip_name,<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>在这里我一开始遇到了返回的 Response 中读不到<code>content-disposition</code>的问题，这里是由于我的 flask 使用了 flask_cors 来进行跨域设置，而该 header 默认未被暴露，需要<code>cors.init_app(app, expose_headers=[&quot;Content-Disposition&quot;])</code>进行设置</p>
+<p>而在前端则使用正则来获取文件名</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> headers = response.headers<br><span class="hljs-keyword">let</span> filename = <span class="hljs-string">&#x27;&#x27;</span><br><span class="hljs-keyword">let</span> filenameRegex = <span class="hljs-regexp">/filename[^;=\n]*=(([&#x27;&quot;]).*?\2|[^;\n]*)/</span><br><span class="hljs-keyword">let</span> matches = filenameRegex.exec(headers[<span class="hljs-string">&#x27;content-disposition&#x27;</span>]);<br><span class="hljs-keyword">if</span> (matches != <span class="hljs-literal">null</span> &amp;&amp; matches[<span class="hljs-number">1</span>]) &#123;<br>    filename = matches[<span class="hljs-number">1</span>].replace(<span class="hljs-regexp">/[&#x27;&quot;]/g</span>, <span class="hljs-string">&#x27;&#x27;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="流式下载"><a href="#流式下载" class="headerlink" title="流式下载"></a>流式下载</h4><p>如果提供的文件比较大，可能很难全部 load 到内存中（像<code>data = f.readlines()</code>那样），flask 提供了 Streaming Content 的支持<sup id="fnref:2" class="footnote-ref"><a href="#fn:2" rel="footnote"><span class="hint--top hint--rounded" aria-label="https://flask.palletsprojects.com/en/2.0.x/patterns/streaming/
+">[2]</span></a></sup>,这边又涉及到如何 line by line 的去读一个大文件,这边参考该回答<sup id="fnref:3" class="footnote-ref"><a href="#fn:3" rel="footnote"><span class="hint--top hint--rounded" aria-label="https://stackoverflow.com/a/8009942/11381693
+">[3]</span></a></sup></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">generate</span>():</span><br>    <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(tmp_zip_path, <span class="hljs-string">&#x27;rb&#x27;</span>) <span class="hljs-keyword">as</span> f:<br>        <span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> f:<br>            <span class="hljs-keyword">yield</span> line<br><span class="hljs-keyword">return</span> current_app.response_class(generate(), headers=&#123;<br>    <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/zip&#x27;</span>,<br>    <span class="hljs-string">&#x27;content-disposition&#x27;</span>: <span class="hljs-string">&#x27;attachment; filename=%s;&#x27;</span> % zip_name,<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>也可以通过 chunkSize 进行更细粒度的控制，而前端的代码其实没有什么要改的。</p>
+<p>一般来说，我们时常遇到的下载方式分为两种：</p>
+<ol>
+<li>直接访问服务器的文件地址,自动下载文件</li>
+<li>返回 blob 文件流，再对文件流进行处理和下载</li>
+</ol>
+<p>在这里使用了后者，这种方式的缺陷是用户无法感知文件流的传输状态，会造成一些困扰（无法确定当前下载操作是否生效），尤其是在下载的文件比较大，不能很快下载完的情况下。</p>
+<p>这时可以设置 axios 的 onDownloadProgress 回调来进行处理</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs javascript">axios(&#123;<br>  url: <span class="hljs-string">&#x27;http://localhost:5000/static/example.pdf&#x27;</span>,<br>  method: <span class="hljs-string">&#x27;GET&#x27;</span>,<br>  responseType: <span class="hljs-string">&#x27;blob&#x27;</span>, <span class="hljs-comment">// important</span><br>  onDownloadProgress: <span class="hljs-function"><span class="hljs-params">progressEvent</span> =&gt;</span> &#123;<br>	<span class="hljs-keyword">let</span> percentCompleted = <span class="hljs-built_in">Math</span>.floor(progressEvent.loaded / progressEvent.total * <span class="hljs-number">100</span>)<br>    <span class="hljs-comment">// use percentCompleted to show progress</span><br>    ...<br>  &#125;<br>&#125;).then(<span class="hljs-function">(<span class="hljs-params">response</span>) =&gt;</span> &#123;<br>  <span class="hljs-keyword">const</span> url = <span class="hljs-built_in">window</span>.URL.createObjectURL(<span class="hljs-keyword">new</span> Blob([response.data]));<br>  <span class="hljs-keyword">const</span> link = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;a&#x27;</span>);<br>  link.href = url;<br>  link.setAttribute(<span class="hljs-string">&#x27;download&#x27;</span>, <span class="hljs-string">&#x27;file.pdf&#x27;</span>);<br>  <span class="hljs-built_in">document</span>.body.appendChild(link);<br>  link.click();<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p>这边使用到了 <code>progressEvent.total</code>，在 flask 返回的 Response 需要添加<code>content-length</code>该 header, 否则前端获取到的 total 值会为 0，在 python 中可以使用<code>os.path.getsize(file_path)</code>得到文件大小</p>
+<p>file-saver 的作者还有构建了个 StreamSaver，在该篇回答中有所提及<sup id="fnref:4" class="footnote-ref"><a href="#fn:4" rel="footnote"><span class="hint--top hint--rounded" aria-label="https://stackoverflow.com/a/39685380/11381693
+">[4]</span></a></sup></p>
+<h4 id="文件下载后删除"><a href="#文件下载后删除" class="headerlink" title="文件下载后删除"></a>文件下载后删除</h4><p>前面提到我使用了 blob 文件流，是因为下载文件是接受到用户请求后，在服务器上对一些文件打包成 zip 生成的，在下载结束后需要继续删除，我参考了这篇回答<sup id="fnref:5" class="footnote-ref"><a href="#fn:5" rel="footnote"><span class="hint--top hint--rounded" aria-label="https://stackoverflow.com/a/24613980/11381693
+">[5]</span></a></sup>,由于我正好使用了 Streaming Content, 所以在<code>generate()</code>中在读取后进行删除即可</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">generate_and_remove_file</span>():</span><br>    <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(tmp_zip_path, <span class="hljs-string">&#x27;rb&#x27;</span>) <span class="hljs-keyword">as</span> f:<br>        <span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> f:<br>            <span class="hljs-keyword">yield</span> line<br>    os.remove(tmp_zip_path)<br>    os.remove(tmp_json_path)<br><span class="hljs-keyword">return</span> current_app.response_class(generate_and_remove_file(), headers=&#123;<br>    <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/zip&#x27;</span>,<br>    <span class="hljs-string">&#x27;content-disposition&#x27;</span>: <span class="hljs-string">&#x27;attachment; filename=%s;&#x27;</span> % zip_name,<br>    <span class="hljs-string">&#x27;content-length&#x27;</span>: file_size<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>当然我也认为，最后所提到的，使用 APScheduler 或者 Celery 这样的异步定时任务清理更加 elegant 和 robust</p>
+<h4 id="一些补充"><a href="#一些补充" class="headerlink" title="一些补充"></a>一些补充</h4><p>@davidism 在他的回答<sup id="fnref:6" class="footnote-ref"><a href="#fn:6" rel="footnote"><span class="hint--top hint--rounded" aria-label="https://stackoverflow.com/a/24318158/11381693
+">[6]</span></a></sup>中提到了静态文件可以使用<code>send_from_directory()</code>以及支持 X-SendFile 的如 Nginx 这样的服务器，不过尽管项目发送给用户的 zip 文件会实际生成在临时文件夹中，但是总归要删除的，而且大概率不会被多次请求，不知道 Nginx 对它进行缓存是否会成为一种浪费</p>
+<h2 id="Axios-Network-Error"><a href="#Axios-Network-Error" class="headerlink" title="Axios Network Error"></a>Axios Network Error</h2><p>前面提到了引入 progress 的一个原因就是不知道 blob 文件流下载操作是否生效，我在项目编写中遇到过这样的一个问题， flask 后端显示的状态码是 200，但是浏览器 console 中看到的是 <code>ERR_INVALID_RESPONSE</code>或是<code>ERR_CONNECTION_RESET</code>, axios 的 issues 有个讨论帖，可惜其中的方法目前对于我来说并不 work, 所以我还是通过加个进度提醒，期望用户看到操作无反应后，多尝试几次。</p>
+<h2 id="容器化"><a href="#容器化" class="headerlink" title="容器化"></a>容器化</h2><p>在开发时，使用<code>flask run</code>会自动加载项目目录下的<code>.env</code>和<code>.flaskenv</code>；在考虑部署时，flask 自带的服务器不适用于生产环境，往往需要使用 gunicron 或者 uwsgi 这样的 WSGI Server.在非容器化部署时，应用并不会自动加载环境文件（因为此时使用的不再是<code>flask run</code>），则需要在项目启动的文件（常规命名是<code>app.py</code>或<code>wsgi.py</code>）中，给<code>create_app()</code>传入<code>production</code>作为参数，并利用 dotenv 的<code>load_dotenv()</code>手动加载环境文件。</p>
+<p>但是在容器化部署时，可以将环境变量文件直接传递给容器进行加载，相对来说更为方便一点。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://docs.python.org/3/library/os.html#os.walk]">https://docs.python.org/3/library/os.html#os.walk]</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://flask.palletsprojects.com/en/2.0.x/patterns/streaming/">https://flask.palletsprojects.com/en/2.0.x/patterns/streaming/</a>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://stackoverflow.com/a/8009942/11381693">https://stackoverflow.com/a/8009942/11381693</a>
+<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:4" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://stackoverflow.com/a/39685380/11381693">https://stackoverflow.com/a/39685380/11381693</a>
+<a href="#fnref:4" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:5" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://stackoverflow.com/a/24613980/11381693">https://stackoverflow.com/a/24613980/11381693</a>
+<a href="#fnref:5" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:6" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://stackoverflow.com/a/24318158/11381693">https://stackoverflow.com/a/24318158/11381693</a>
+<a href="#fnref:6" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:7" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://github.com/axios/axios/issues/1827">https://github.com/axios/axios/issues/1827</a>
+<a href="#fnref:7" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/flask/">flask</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Vue/">Vue</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/03/26/%E6%AF%95%E8%AE%BE%E9%9A%8F%E6%84%9F/">
+                        <span class="hidden-mobile">毕设随感</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.lazyComments('waline', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/@waline/client@0.14.8/dist/Waline.min.js', function () {
+        new Waline({
+          el: "#waline",
+          placeholder: "说点什么",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: true,
+          serverURL: "https://imnerd-api-steel.vercel.app/",
+          avatarCDN: "",
+          avatarForce: false,
+          requiredFields: [],
+          emojiCDN: "",
+          emojiMaps: {},
+          anonymous: null,
+        });
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the
+    <a target="_blank" href="https://waline.js.org" rel="nofollow noopener noopener">comments powered by Waline.</a>
+  </noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

@@ -1,0 +1,611 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Rickicon2.ico">
+  <link rel="icon" href="/img/Rickicon2.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="google-site-verification" content="2LnXQIXdhJV_gy8RXbAXgNcNzhllQC_Me3_qlIIkC3I" /> <meta name="baidu-site-verification" content="code-Y5g1WZqiGT" />
+  
+  <title>MyDocker 实现踩坑指南 - Flaglord</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"flaglord.com","root":"/","version":"1.8.9a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":6},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Flaglord's Space</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/banner.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="MyDocker 实现踩坑指南">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-10-17 13:48" pubdate>
+        2021年10月17日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      33
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">MyDocker 实现踩坑指南</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2022年3月26日 下午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>《自己动手写 Docker》成书是在数年前，也一直没有更新，而且相关项目仓库的 Issues 板块也不是十分活跃，期间自己也遇到了一些问题，而通过搜寻阅读资料，对于部分知识的理解也有所加深，在这里做一些简单的整理。</p>
+<p>环境如下：</p>
+<blockquote>
+<p>Golang: 1.17</p>
+<p>Host: WSL Ubuntu 20.04</p>
+</blockquote>
+<h2 id="CLONE-NEWUSER"><a href="#CLONE-NEWUSER" class="headerlink" title="CLONE_NEWUSER"></a>CLONE_NEWUSER</h2><p>关于 namespace 的问题可以参考一下这一系列的文章<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="Namespace
+">[1]</span></a></sup>,一些问题在这里面有所提及。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go">cmd.SysProcAttr = &amp;syscall.SysProcAttr&#123;<br>		Cloneflags: syscall.CLONE_NEWUTS | syscall.CLONE_NEWIPC | syscall.CLONE_NEWPID | syscall.CLONE_NEWNS | syscall.CLONE_NEWNET,<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在这里的<code>Cloneflags</code>没有设置<code>CLONE_NEWUSER</code>，所以如果不以<code>root</code>权限运行程序，会报错</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-comment"># zyc @ DESKTOP-KK42M35 in /mnt/d/GoProject/src/MyDocker on git:master x [13:47:21] </span><br>$ ./main run /bin/zsh -it<br>fork/<span class="hljs-built_in">exec</span> /proc/self/exe: operation not permitted<br></code></pre></td></tr></table></figure>
+
+<p>使用<code>sudo</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-comment"># zyc @ DESKTOP-KK42M35 in /mnt/d/GoProject/src/MyDocker on git:master x [14:06:17] C:255</span><br>$ sudo ./main run /bin/zsh -it<br>/bin/zsh<br>DESKTOP-KK42M35<span class="hljs-comment"># whoami</span><br>root<br>DESKTOP-KK42M35<span class="hljs-comment"># id root</span><br>uid=0(root) gid=0(root) groups=0(root)<br>DESKTOP-KK42M35<span class="hljs-comment"># </span><br></code></pre></td></tr></table></figure>
+
+<p>我们在<code>Cloneflags</code>中加入<code>CLONE_NEWUSER</code>,现在我们可以使用 non-root 权限运行程序（注意用户名的变化）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># zyc @ DESKTOP-KK42M35 in /mnt/d/GoProject/src/MyDocker on git:master x [14:09:48] C:255</span><br>$ ./main run /bin/zsh -it<br>/bin/zsh<br><br><span class="hljs-comment"># nobody @ DESKTOP-KK42M35 in /mnt/d/GoProject/src/MyDocker on git:master x [14:09:52] </span><br>$ whoami<br>nobody<br><br><span class="hljs-comment"># nobody @ DESKTOP-KK42M35 in /mnt/d/GoProject/src/MyDocker on git:master x [14:10:05] </span><br>$ id nobody<br>uid=65534(nobody) gid=65534(nogroup) groups=65534(nogroup)<br></code></pre></td></tr></table></figure>
+
+<p>但是与前面相比，我们在创建出的 namespace 的 shell 中失去了 root 权限,而关于 container 的初始化工作中需要去挂载<code>/proc</code>:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">defaultMountFlags := syscall.MS_NOEXEC | syscall.MS_NOSUID | syscall.MS_NODEV<br>syscall.Mount(<span class="hljs-string">&quot;proc&quot;</span>, <span class="hljs-string">&quot;/proc&quot;</span>, <span class="hljs-string">&quot;proc&quot;</span>, <span class="hljs-keyword">uintptr</span>(defaultMountFlags), <span class="hljs-string">&quot;&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>作为 non-root user，<code>mount</code>指定<code>-t</code>类型时会出现<code>operation not permitted</code>的错误,这个问题需要去进行修正.</p>
+<p>我们需要用到<code>UidMappings</code>和<code>GidMappings</code>，具体的解释可以看一下这篇文章<sup id="fnref:2" class="footnote-ref"><a href="#fn:2" rel="footnote"><span class="hint--top hint--rounded" aria-label="Namespace in Go
+">[2]</span></a></sup>,简单地说，它允许一个以<code>non-root-user</code>权限运行的进程 spawn 出一个以<code>root</code>权限运行的进程，不过在不同的 namespcae.</p>
+<img src="/2021/10/17/MyDocker-%E5%AE%9E%E7%8E%B0%E8%B8%A9%E5%9D%91%E6%8C%87%E5%8D%97/1lY9jQy-ZHnKF1fMEe0W9qQ.jpeg" srcset="/img/loading.gif" lazyload class="" alt="img">
+
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs go">cmd.SysProcAttr = &amp;syscall.SysProcAttr&#123;<br>	Cloneflags: syscall.CLONE_NEWUTS | syscall.CLONE_NEWIPC | syscall.CLONE_NEWPID | syscall.CLONE_NEWNS | syscall.CLONE_NEWUSER | syscall.CLONE_NEWNET,<br>	UidMappings: []syscall.SysProcIDMap&#123;<br>		&#123;<br>			ContainerID: <span class="hljs-number">0</span>,<br>			HostID:      syscall.Getuid(),<br>			Size:        <span class="hljs-number">1</span>,<br>		&#125;,<br>	&#125;,<br>	GidMappings: []syscall.SysProcIDMap&#123;<br>		&#123;<br>			ContainerID: <span class="hljs-number">0</span>,<br>			HostID:      syscall.Getgid(),<br>			Size:        <span class="hljs-number">1</span>,<br>		&#125;,<br>	&#125;,<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在这里有个不重要的注意点：如果<code>HostID</code>并非是当前进程的 ID 或者 size &gt; 1（必然包含非当前进程）的话，那么必须使用<code>sudo</code>才能运行这段代码。</p>
+</blockquote>
+<p>现在运行结果如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># zyc @ DESKTOP-KK42M35 in /mnt/d/GoProject/src/MyDocker on git:master x [17:56:51] C:255</span><br>$ ./main run /bin/zsh -it<br>/bin/zsh<br><br><span class="hljs-comment"># root @ DESKTOP-KK42M35 in /mnt/d/GoProject/src/MyDocker on git:master x [17:56:54] </span><br>$ id root  <br>uid=0(root) gid=0(root) groups=0(root)<br></code></pre></td></tr></table></figure>
+
+<h2 id="关于-Storage-Driver"><a href="#关于-Storage-Driver" class="headerlink" title="关于 Storage Driver"></a>关于 Storage Driver</h2><p>在实现第四章相关代码时，使用<code>mount</code>挂载时会报错<code>unknown filesystem &#39;aufs&#39;</code>.</p>
+<p>使用<code>docker info</code>指令查看本机信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ docker info<br>Client:<br> Debug Mode: <span class="hljs-literal">false</span><br> Plugins:<br>  compose: Docker Compose (Docker Inc., 2.0.0-beta.4)<br>  scan: Docker Scan (Docker Inc., v0.8.0)<br>  app: Docker Application (Docker Inc., v0.8.0)<br>  buildx: Build with BuildKit (Docker Inc., v0.4.2-tp-docker)<br><br>Server:<br> Containers: 2<br>  Running: 1<br>  Paused: 0<br>  Stopped: 1<br> Images: 28<br> Server Version: 20.10.7<br> Storage Driver: overlay2<br> ...<br></code></pre></td></tr></table></figure>
+
+<p>注意到<code>Storage Driver</code>字段值为<code>overlay2</code>, OverlayFS 与 AUFS 类似，同样是一种 Union FileSystem，但是速度更快，实现更简单。参考一下 docker 的<a target="_blank" rel="noopener" href="https://docs.docker.com/storage/storagedriver/overlayfs-driver/">官方文档</a>以及这篇文章<sup id="fnref:3" class="footnote-ref"><a href="#fn:3" rel="footnote"><span class="hint--top hint--rounded" aria-label="overlayfs
+">[3]</span></a></sup></p>
+<p>应该是内核版本比较高，所以使用的是后继者 OverlayFS 而非 AUFS.使用<code>cat /proc/filesystems</code>查看文件系统信息也可以可以只有 overlay.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ cat /proc/filesystems<br>nodev   sysfs<br>nodev   rootfs<br>nodev   tmpfs<br>nodev   bdev<br>nodev   proc<br>nodev   cpuset<br>nodev   cgroup<br>nodev   cgroup2<br>nodev   devtmpfs<br>nodev   binfmt_misc<br>nodev   debugfs<br>nodev   tracefs<br>nodev   sockfs<br>nodev   dax<br>nodev   bpf<br>nodev   pipefs<br>nodev   ramfs<br>nodev   hugetlbfs<br>nodev   rpc_pipefs<br>nodev   devpts<br>        ext3<br>        ext2<br>        ext4<br>        squashfs<br>        vfat<br>        msdos<br>        iso9660<br>nodev   nfs<br>nodev   nfs4<br>nodev   nfsd<br>nodev   cifs<br>nodev   smb3<br>nodev   autofs<br>        fuseblk<br>nodev   fuse<br>nodev   fusectl<br>nodev   overlay<br>        xfs<br>nodev   9p<br>nodev   ceph<br>nodev   mqueue<br>        btrfs<br></code></pre></td></tr></table></figure>
+
+<h3 id="overlay-example"><a href="#overlay-example" class="headerlink" title="overlay  example"></a>overlay  example</h3><p>先准备好以下一些文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># zyc @ DESKTOP-KK42M35 in ~/aufs [23:39:49]</span><br>$ tree<br>.<br>├── container-layer<br>│   └── container-layer.txt<br>├── image-layer1<br>│   └── image-layer1.txt<br>├── image-layer2<br>│   └── image-layer2.txt<br>├── image-layer3<br>│   └── image-layer3.txt<br>├── mnt<br>└── work<br><br>6 directories, 4 files<br></code></pre></td></tr></table></figure>
+
+<p><code>container-layer.txt</code>以及<code>image-layer_id.txt</code>文件的内容为<code>i&#39;m $&#123;filename&#125;</code>,如</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># zyc @ DESKTOP-KK42M35 in ~/aufs [23:39:51]</span><br>$ cat container-layer/container-layer.txt<br>i<span class="hljs-string">&#x27;m container-layer</span><br><span class="hljs-string"></span><br><span class="hljs-string"># zyc @ DESKTOP-KK42M35 in ~/aufs [23:41:35]</span><br><span class="hljs-string">$ cat image-layer1/image-layer1.txt</span><br><span class="hljs-string">i&#x27;</span>m image-layer1<br></code></pre></td></tr></table></figure>
+
+<p>使用<code>mount</code>进行挂载：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># zyc @ DESKTOP-KK42M35 in ~/aufs [23:50:11]</span><br>$ sudo mount -t overlay overlay -o lowerdir=image-layer1:image-layer2:image-layer3,upperdir=container-layer,workdir=work  mnt<br><br><span class="hljs-comment"># zyc @ DESKTOP-KK42M35 in ~/aufs [23:51:50]</span><br>$ tree mnt<br>mnt<br>├── container-layer.txt<br>├── image-layer1.txt<br>├── image-layer2.txt<br>└── image-layer3.txt<br><br>0 directories, 4 files<br></code></pre></td></tr></table></figure>
+
+<h4 id="写入文件"><a href="#写入文件" class="headerlink" title="写入文件"></a>写入文件</h4><p>如果我们尝试向<code>image-layer1.txt</code>写入一些内容，变化不会反映在<code>image-layer1/image-layer1.txt</code>上，而是会复制一份新的文件到<code>container-layer</code>文件夹，并在这之上做修改：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># zyc @ DESKTOP-KK42M35 in ~/aufs [23:55:31] C:130</span><br>$ <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;i&#x27;m image-layer1 test: hello&quot;</span> &gt;&gt; mnt/image-layer1.txt	//写入新的内容<br><br><span class="hljs-comment"># zyc @ DESKTOP-KK42M35 in ~/aufs [23:55:35]</span><br>$ cat mnt/image-layer1.txt	//查看mnt目录下文件的内容<br>i<span class="hljs-string">&#x27;m image-layer1</span><br><span class="hljs-string">i&#x27;</span>m image-layer1 <span class="hljs-built_in">test</span>: hello<br><br><span class="hljs-comment"># zyc @ DESKTOP-KK42M35 in ~/aufs [23:55:46]</span><br>$ cat image-layer1/image-layer1.txt	//原文件无任何变化<br>i<span class="hljs-string">&#x27;m image-layer1</span><br><span class="hljs-string"></span><br><span class="hljs-string"># zyc @ DESKTOP-KK42M35 in ~/aufs [23:55:54]</span><br><span class="hljs-string">$ tree	//container-layer文件夹中多了新文件</span><br><span class="hljs-string">.</span><br><span class="hljs-string">├── container-layer</span><br><span class="hljs-string">│   ├── container-layer.txt</span><br><span class="hljs-string">│   └── image-layer1.txt</span><br><span class="hljs-string">├── image-layer1</span><br><span class="hljs-string">│   └── image-layer1.txt</span><br><span class="hljs-string">├── image-layer2</span><br><span class="hljs-string">│   └── image-layer2.txt</span><br><span class="hljs-string">├── image-layer3</span><br><span class="hljs-string">│   └── image-layer3.txt</span><br><span class="hljs-string">├── mnt</span><br><span class="hljs-string">│   ├── container-layer.txt</span><br><span class="hljs-string">│   ├── image-layer1.txt</span><br><span class="hljs-string">│   ├── image-layer2.txt</span><br><span class="hljs-string">│   └── image-layer3.txt</span><br><span class="hljs-string">└── work</span><br><span class="hljs-string">    └── work [error opening dir]</span><br><span class="hljs-string"></span><br><span class="hljs-string">7 directories, 9 files</span><br><span class="hljs-string"></span><br><span class="hljs-string"># zyc @ DESKTOP-KK42M35 in ~/aufs [23:56:08]</span><br><span class="hljs-string">$ cat container-layer/image-layer1.txt	//内容为刚刚写入的内容</span><br><span class="hljs-string">i&#x27;</span>m image-layer1<br>i<span class="hljs-string">&#x27;m image-layer1 test: hello</span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>同时注意到<code>tree</code>命令下,<code>work</code>文件夹报错<code>error opening dir</code>,这是因为 workdir 应该是 overlayfs 内部使用的文件夹，不应该被外界所读取</p>
+</blockquote>
+<h4 id="创建文件"><a href="#创建文件" class="headerlink" title="创建文件"></a>创建文件</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># zyc @ DESKTOP-KK42M35 in ~/aufs [23:56:17]</span><br>$ <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;new file&quot;</span> &gt;&gt; mnt/new_file.txt<br><br><span class="hljs-comment"># zyc @ DESKTOP-KK42M35 in ~/aufs [0:01:22]</span><br>$ tree<br>.<br>├── container-layer<br>│   ├── container-layer.txt<br>│   ├── image-layer1.txt<br>│   └── new_file.txt<br>├── image-layer1<br>│   └── image-layer1.txt<br>├── image-layer2<br>│   └── image-layer2.txt<br>├── image-layer3<br>│   └── image-layer3.txt<br>├── mnt<br>│   ├── container-layer.txt<br>│   ├── image-layer1.txt<br>│   ├── image-layer2.txt<br>│   ├── image-layer3.txt<br>│   └── new_file.txt<br>└── work<br>    └── work [error opening dir]<br><br>7 directories, 11 files<br></code></pre></td></tr></table></figure>
+
+<p>新创建的文件在<code>container-layer</code>文件夹下</p>
+<h4 id="删除文件"><a href="#删除文件" class="headerlink" title="删除文件"></a>删除文件</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># zyc @ DESKTOP-KK42M35 in ~/aufs [0:01:26]</span><br>$ rm -rf mnt/image-layer1.txt<br><br><span class="hljs-comment"># zyc @ DESKTOP-KK42M35 in ~/aufs [0:02:50]</span><br>$ tree<br>.<br>├── container-layer<br>│   ├── container-layer.txt<br>│   ├── image-layer1.txt<br>│   └── new_file.txt<br>├── image-layer1<br>│   └── image-layer1.txt<br>├── image-layer2<br>│   └── image-layer2.txt<br>├── image-layer3<br>│   └── image-layer3.txt<br>├── mnt<br>│   ├── container-layer.txt<br>│   ├── image-layer2.txt<br>│   ├── image-layer3.txt<br>│   └── new_file.txt<br>└── work<br>    └── work [error opening dir]<br><br>7 directories, 10 files<br><br><span class="hljs-comment"># zyc @ DESKTOP-KK42M35 in ~/aufs [0:02:52]</span><br>$ ls -al container-layer<br>total 16<br>drwxr-xr-x 2 zyc  zyc  4096 Oct 27 00:02 .<br>drwxr-xr-x 8 zyc  zyc  4096 Oct 26 23:39 ..<br>-rw-r--r-- 1 zyc  zyc    20 Oct 20 00:53 container-layer.txt<br>c--------- 1 root root 0, 0 Oct 27 00:02 image-layer1.txt<br>-rw-r--r-- 1 zyc  zyc     9 Oct 27 00:01 new_file.txt<br></code></pre></td></tr></table></figure>
+
+<p><code>image-layer1.txt</code>变成了一个字符设备，相关解释在此篇文章<sup id="fnref:3" class="footnote-ref"><a href="#fn:3" rel="footnote"><span class="hint--top hint--rounded" aria-label="overlayfs
+">[3]</span></a></sup>中有所提及</p>
+<div class="note note-info">
+            <p>whiteouts and opaque directories</p><p>In order to support rm and rmdir without changing the lower<br>filesystem, an overlay filesystem needs to record in the upper filesystem<br>that files have been removed.  This is done using whiteouts and opaque<br>directories (non-directories are always opaque).</p><p>A whiteout is created as a character device with 0/0 device number.<br>When a whiteout is found in the upper level of a merged directory, any<br>matching name in the lower level is ignored, and the whiteout itself<br>is also hidden.</p><p>A directory is made opaque by setting the xattr “trusted.overlay.opaque”<br>to “y”.  Where the upper filesystem contains an opaque directory, any<br>directory in the lower filesystem with the same name is ignored.</p>
+          </div>
+
+<h4 id="一些补充"><a href="#一些补充" class="headerlink" title="一些补充"></a>一些补充</h4><p><code>mount</code>挂载时，<code>upperdir</code>只能指定一个文件夹，否则会报错</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">mount: <span class="hljs-regexp">/home/</span>zyc<span class="hljs-regexp">/aufs/m</span>nt: special device overlay does not exist.<br></code></pre></td></tr></table></figure>
+
+<p>如果想挂载一个只读的文件系统，只需要指定<code>lowerdir</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># zyc @ DESKTOP-KK42M35 in ~/aufs [0:36:24]</span><br>$ sudo mount -t overlay overlay -o lowerdir=image-layer1:image-layer2 mnt<br><br><span class="hljs-comment"># zyc @ DESKTOP-KK42M35 in ~/aufs [0:36:28]</span><br>$ tree<br>.<br>├── container-layer<br>│   ├── container-layer.txt<br>│   ├── image-layer1.txt<br>│   ├── image-layer2.txt<br>│   └── new_file.txt<br>├── image-layer1<br>│   └── image-layer1.txt<br>├── image-layer2<br>│   └── image-layer2.txt<br>├── image-layer3<br>│   └── image-layer3.txt<br>├── mnt<br>│   ├── image-layer1.txt<br>│   └── image-layer2.txt<br>└── work<br>    └── work [error opening dir]<br><br>7 directories, 9 files<br><br><span class="hljs-comment"># zyc @ DESKTOP-KK42M35 in ~/aufs [0:36:30]</span><br>$ <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;new file&quot;</span> &gt;&gt; mnt/image-layer1.txt<br>zsh: read-only file system: mnt/image-layer1.txt<br></code></pre></td></tr></table></figure>
+
+<p>但是<code>lowdir</code>指定的文件夹数必须大于 1，否则会报错</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ sudo mount -t overlay overlay -o lowerdir=image-layer1 mnt<br>mount: /home/zyc/aufs/mnt: wrong fs <span class="hljs-built_in">type</span>, bad option, bad superblock on overlay, missing codepage or helper program, or other error.<br></code></pre></td></tr></table></figure>
+
+<p>因为如果只是挂载单个文件夹的话，其实没必要使用 overlay，使用 mount bind 即可<sup id="fnref:4" class="footnote-ref"><a href="#fn:4" rel="footnote"><span class="hint--top hint--rounded" aria-label="Read only bind-mount?
+">[4]</span></a></sup></p>
+<p>另外书中使用<code>-v</code>做数据集映射时实现使用了 aufs mount，其实简单的 bind mount 就可以满足需要</p>
+<h2 id="关于-Docker-i、-t、-d-参数"><a href="#关于-Docker-i、-t、-d-参数" class="headerlink" title="关于 Docker -i、-t、-d 参数"></a>关于 Docker -i、-t、-d 参数</h2><p>参考<a target="_blank" rel="noopener" href="http://www.jerrymei.cn/docker-run-interactive-tty-detach/">如何正确使用 docker run -i、 -t、-d 参数</a></p>
+<p>《自己动手写 Docker》中为了简化直接将 <code>-i</code>和<code>-t</code>合并成了<code>-it</code></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://medium.com/@teddyking/linux-namespaces-850489d3ccf">Namespace</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://medium.com/@teddyking/namespaces-in-go-user-a54ef9476f2a">Namespace in Go</a>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.kernel.org/doc/Documentation/filesystems/overlayfs.txt">overlayfs</a>
+<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:4" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://serverfault.com/questions/136515/read-only-bind-mount">Read only bind-mount?</a>
+<a href="#fnref:4" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/golang/">golang</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/golang/">golang</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/10/28/golang-file-permission-mode/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">golang file permission mode</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/10/16/%E5%A6%82%E4%BD%95%E5%9C%A8Golang%E4%B8%AD%E5%AE%9E%E7%8E%B0Fork/">
+                        <span class="hidden-mobile">如何在Golang中实现Fork()</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.lazyComments('waline', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/@waline/client@0.14.8/dist/Waline.min.js', function () {
+        new Waline({
+          el: "#waline",
+          placeholder: "说点什么",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: true,
+          serverURL: "https://imnerd-api-steel.vercel.app/",
+          avatarCDN: "",
+          avatarForce: false,
+          requiredFields: [],
+          emojiCDN: "",
+          emojiMaps: {},
+          anonymous: null,
+        });
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the
+    <a target="_blank" href="https://waline.js.org" rel="nofollow noopener noopener">comments powered by Waline.</a>
+  </noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

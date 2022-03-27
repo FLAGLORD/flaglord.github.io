@@ -1,0 +1,553 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Rickicon2.ico">
+  <link rel="icon" href="/img/Rickicon2.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="google-site-verification" content="2LnXQIXdhJV_gy8RXbAXgNcNzhllQC_Me3_qlIIkC3I" /> <meta name="baidu-site-verification" content="code-Y5g1WZqiGT" />
+  
+  <title>2PC and 3PC - Flaglord</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"flaglord.com","root":"/","version":"1.8.9a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":6},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Flaglord's Space</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/banner.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="2PC and 3PC">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-07-18 20:40" pubdate>
+        2021年7月18日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      14
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">2PC and 3PC</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2022年3月26日 下午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <p>本文主要记述在学习 2PC 和 3PC 时的一些思考</p>
+<h2 id="2PC"><a href="#2PC" class="headerlink" title="2PC"></a>2PC</h2><p>关于 2PC 网上有许多文章介绍，在这里不做赘述。下面提几个关键点以及其和 3PC 的联系</p>
+<p>对于分布式事务而言，其也要保证 Atomicity,即 All-Or-Nothing,其要存在一个 Commit Point。在这之前事务视作失败（Nothing），在这之后事务视作成功（All）。2PC 中，Coordinator 在 Vote 阶段收到所有 Participants 的 agree 后，在向 Participants 发送 commit message 之前，会先在 Log 上写下相关记录。在磁盘上 log 的记录成功视作 Commit Point,在此之后即便 Coordinator crash,其可以通过 Log 得知当前状态，继续完成剩余的阶段(Commit).反之，即便得到所有 Participants 的 agree，Coordinator 在 Log 记录成功前 crash，重启后会选择 abort.</p>
+<p>2PC 属于 Blocking protocol，在下图 DDIA 提到的例子中：如果 Coordinator 崩溃，Participants 将无法继续推进，只能等待 Coordinator recovery，原因在于 Database1 收到 commit 后提交了事务，而 Database2 由于无法收到 Coordinator 的信息，它并不清楚事务整体上是 Abort 还是 Commit，无论采取什么样的行为，都会有风险和其他副本不再保持一致。当然理论上，Participants 在无法收到 Coordinator 信息后可以彼此之间互相交流从而推进事务：</p>
+<ol>
+<li>If no participants had received a commit message, 没有提交发生，可以选择 abort 整个事务</li>
+<li>If any participant had received a commit message,已经有提交发生，其余的 Participants 可以跟进提交事务</li>
+</ol>
+<p>不过以上这些并不包括在 2PC 的内容之内</p>
+<img src="/2021/07/18/2PC-and-3PC/fig9-10.png" srcset="/img/loading.gif" lazyload class="" alt="img">
+
+<h3 id="更棘手的情况"><a href="#更棘手的情况" class="headerlink" title="更棘手的情况"></a>更棘手的情况</h3><p>以上提到的解决方案适用于只有 Coordinator 失效的情况 ，如果 Coordinator 和某一个 Participant 一起 failed，而且恰好失效的 Participant 是被 Coordinator  通知的第一个对象并且已经进行了提交。即便剩余存活的 Participant 可以交换信息，由于它们无法得知失效的 Participant 的状态，因此选择 commit 或者 abort 都存在风险。即使有新的 coordinator ，而一般 Log 中不会记录 commit 信息目前已经发送给了哪些 Participant(每次发送前都要记录对性能是一种拖累)，在得到所有 Participant 回应之前，它也不得不一直 block</p>
+<img src="/2021/07/18/2PC-and-3PC/2pc-crash.svg" srcset="/img/loading.gif" lazyload class="" alt="img">
+
+<h2 id="3PC"><a href="#3PC" class="headerlink" title="3PC"></a>3PC</h2><p>3PC 是为了解决 2PC 问题设计出来的 Nonblocking protocol，其介绍可以参考 wiki<sup id="fnref:3" class="footnote-ref"><a href="#fn:3" rel="footnote"><span class="hint--top hint--rounded" aria-label="3PC-wiki
+">[3]</span></a></sup>（个人觉得讲得比网络上的一些文章明白清晰）</p>
+<p>3PC 可以视作将 2PC 的 commit phase 拆成了 preCommit 以及 doCommit 两个 phase，doCommit 实际上做了跟 2PC 第二个阶段几乎一样的事情，而 preCommit 相当于提供了一段缓冲，让 participant 有机会知道 vote 的结果。</p>
+<p>如果 Coordinator 在发送 preCommit messages 之前 crash，participants 可以一致认为事务 aborted.而 Coordinator 只会在得到所有 Participants 对 preCommit messages 的 Ack 后才会发送 doCommit message.</p>
+<p>在网上阅读一些文章时，有的人评论中提到如果 3PC 遇到了 2PC 在上文遭遇的情况该怎么办？这里体现的正是 3PC 的精妙所在：2PC 中大家并不知道失效的 participant 状况，它既有可能在 vote 阶段选择了 abort,也有可能在 commit 阶段已经率先提交了事务；而 3PC中, Coordinator 失效后，新的节点可以接管事务，并且询问剩余的 participant 的状态：</p>
+<ol>
+<li><p>如果所有的 participants 都已经收到了 preCommit  messages，那么新的 Coordinator 可以认为事务能够提交</p>
+<div class="note note-info">
+            <p>大家收到 preCommit messages 的前提是所有人在 vote 阶段都 agree，所以如果剩余存活的 participants 都收到了 preCommit, 无论失效的 participant 是否收到 preCommit,coordinator 选择提交是没有风险（否则失效节点也不会在 vote 阶段选择 agree）</p>
+          </div></li>
+<li><p>如果有任意一个 participant 没有收到 preCommit messages,那么  Coordinator 可以选择 abort transaction 或者重新启动整个事务提交的流程</p>
+<div class="note note-info">
+            <p>在这里可以放心大胆地 abort 的原因正是只有所有的 participants 收到 preCommit后才会进入提交阶段，换言之，只要有任意一个未收到，那么不会有任意一个副本已经提交了从而造成与其他 abort 事务的副本不一致的状态</p>
+          </div></li>
+</ol>
+<p><em>不过 3PC 并没有解决所有的问题，如果出现了 network partition，one partition 中所有的 participants 收到了 preCommit messages, the other partition 中的 participant 则没有，那么两边可能会分别 abort 或 commit 事务，从而当网络恢复时会出现副本状态不一致的情况。此外由于 3PC 多了一个阶段，需要交换的信息也变多了，对于对  latency 要求比较严格的应用来说可能不是那么适合。不过至少 3PC 不会因为 single node failures 而 block，所以如果对高可用性有一定要求可以考虑 3PC</em></p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.the-paper-trail.org/post/2008-11-27-consensus-protocols-two-phase-commit/">2PC</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.the-paper-trail.org/post/2008-11-29-consensus-protocols-three-phase-commit/">3PC</a>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Three-phase_commit_protocol#:~:text=From%20Wikipedia%2C%20the%20free%20encyclopedia%20In%20computer%20networking,failure-resilient%20refinement%20of%20the%20two-phase%20commit%20protocol%20%282PC%29.">3PC-wiki</a>
+<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Distributed-System/">Distributed System</a>
+                    
+                      <a class="hover-with-bg" href="/tags/2PC/">2PC</a>
+                    
+                      <a class="hover-with-bg" href="/tags/3PC/">3PC</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/07/25/transaction/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">DDIA-transaction学习</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/07/09/%E5%85%B3%E4%BA%8Egit-rebase/">
+                        <span class="hidden-mobile">关于git rebase</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.lazyComments('waline', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/@waline/client@0.14.8/dist/Waline.min.js', function () {
+        new Waline({
+          el: "#waline",
+          placeholder: "说点什么",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: true,
+          serverURL: "https://imnerd-api-steel.vercel.app/",
+          avatarCDN: "",
+          avatarForce: false,
+          requiredFields: [],
+          emojiCDN: "",
+          emojiMaps: {},
+          anonymous: null,
+        });
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the
+    <a target="_blank" href="https://waline.js.org" rel="nofollow noopener noopener">comments powered by Waline.</a>
+  </noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

@@ -1,0 +1,563 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Rickicon2.ico">
+  <link rel="icon" href="/img/Rickicon2.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="google-site-verification" content="2LnXQIXdhJV_gy8RXbAXgNcNzhllQC_Me3_qlIIkC3I" /> <meta name="baidu-site-verification" content="code-Y5g1WZqiGT" />
+  
+  <title>小话分布式系统——从 3W 出发（一） - Flaglord</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"flaglord.com","root":"/","version":"1.8.9a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":6},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Flaglord's Space</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/banner.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="小话分布式系统——从 3W 出发（一）">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-04-14 10:16" pubdate>
+        2021年4月14日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.8k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      29
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">小话分布式系统——从 3W 出发（一）</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2022年3月26日 下午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>分布式系统概念繁多，如果对其没有体系化的认知，学到的知识很容易成为孤岛，一头埋进实现的琐碎细节里，缺乏整体的把握，这样的学习过程会非常痛苦。</p>
+<p>所以本文是我对自己所学的一个整理，从 3W 原则出发来看分布式系统。</p>
+<h1 id="WHY——为什么需要分布式系统？"><a href="#WHY——为什么需要分布式系统？" class="headerlink" title="WHY——为什么需要分布式系统？"></a>WHY——为什么需要分布式系统？</h1><p>回答 what 之前，我觉得很有必要探讨下 why :分布式系统是在什么背景下提出来的以及它所解决的问题。</p>
+<p><strong>计算机有两个重要的概念：数据和计算，数据是计算的对象，而计算是数据得到利用创造价值的过程。</strong></p>
+<ul>
+<li>计算上的需求：在单台服务器上，运算量太大以及太慢，我们可以选择多线程编程，利用多核和并行尽可能榨取 CPU 的带宽和性能。但还是太慢了，如果选择 SCALE UP  (纵向拓展)，就是提升单个节点的能力 ，使用更快和更多的 CPU，然而成本增长的速度往往快于线性增长，同时由于散热以及访存的原因往往容易存在瓶颈而不足以处理相应的载荷</li>
+<li>存储上的需求：数据量的飞速增长，对于存储提出了越来越高的要求。如果数据规模远远超过 SCALE UP 的上限，我们只能选择通过 SCALE OUT (横向拓展),以增加节点的方式来分担存储的压力。同时在多个节点上各自处理相应数据的计算任务，利用  data locality 也可以更好地节省带宽</li>
+<li>容错性：单台服务器出现故障就无法对外提供服务，使用多台机器提供冗余可以提升服务的质量</li>
+<li>延迟：如果大洋东岸的用户想要获取大洋西岸的服务器上的数据，网络包不得不穿越半个世界，如果在世界各地部署多个服务器，可以提供延迟更低、用户体验更好的服务</li>
+<li>拓展性：如果只使用单台服务器，当现有服务器无法应对日益增长的用户规模和业务需求时，更换服务器重新部署不仅麻烦，而且还未必能很好地解决问题，使用分布式系统拓展性更好</li>
+</ul>
+<h1 id="WHAT——什么是分布式系统？"><a href="#WHAT——什么是分布式系统？" class="headerlink" title="WHAT——什么是分布式系统？"></a>WHAT——什么是分布式系统？</h1><blockquote>
+<p>A distributed system consists of multiple autonomous computers that communicate through a computer network. The computers interact with each other in order to achieve a common goal.</p>
+<p>• There are several autonomous computational entities, each of which has its own local memory</p>
+<p>• The entities communicate with each other by information  passing</p>
+</blockquote>
+<p><strong>简而言之，分布式系统就是由多台计算机通过一个计算机网络交流并协作，来完成一个共同目标或解决一个共同问题</strong></p>
+<h1 id="HOW——如何去设计分布式系统以及设计面对的挑战？"><a href="#HOW——如何去设计分布式系统以及设计面对的挑战？" class="headerlink" title="HOW——如何去设计分布式系统以及设计面对的挑战？"></a>HOW——如何去设计分布式系统以及设计面对的挑战？</h1><h2 id="数据划分（分区）"><a href="#数据划分（分区）" class="headerlink" title="数据划分（分区）"></a>数据划分（分区）</h2><p>Partition 或者也可以称作 shard 问题</p>
+<p>既然谈到协作解决一个共同问题，那么分治的一个核心就是如何去分解问题，那么我们不得不思考以下一些问题</p>
+<ol>
+<li>是否能保证数据的分布均匀？</li>
+<li>新增或者删除节点时，数据如何在各节点间迁移？迁移的数据规模有多大？</li>
+<li>元数据如何管理？（元数据：当数据分布在各个节点时，我们需要记录各自数据所在的节点位置以及状态等信息，它是 <strong>data about  data</strong>  即关于数据的数据  ）</li>
+<li>如何抽取数据的特征？</li>
+</ol>
+<h3 id="哈希方式"><a href="#哈希方式" class="headerlink" title="哈希方式"></a>哈希方式</h3><p>最常见的数据分布方式 ，其按照数据的某一特征值计算哈希值，并建立与机器的映射关系。数据特征值可以是key-value 系统中的key,也可以是与业务逻辑相关的值（比如数据属于的用户ID).考虑一个最简单的散列函数 mod N. N 可以是服务器的数量，<strong>但在工程上需要考虑服务器的副本冗余，将数台服务器编程一组，N为组的总数量</strong></p>
+<p>理论上，只要哈希函数的散列特性较好，它可以较为均匀地将数据分布到集群中。其记录的元信息也比较简单：hash函数以及取模的 N.</p>
+<p>然而其缺点很明显：加入或者删除节点时，会有大量的数据需要移动，有时这种大规模的数据迁移会影响到系统对外的正常服务。为了减少迁移的数据量，节点的数目往往成倍增长，这样概率上讲至多有50%的数据需要迁移。</p>
+<p>还有一种改善拓展性的思路是将对应关系的元数据由专门的服务器进行管理，此时取模的 Partitions 数量往往大于机器个数（组数）.每一台（组）机器负责多个取模的余数。在扩容时，将部分余数迁移到新机器上。不过在访问数据时，需要查询元数据服务器找到负责该数据的机器，这对元数据服务器提出了比较高的要求。</p>
+<p>它的另一个缺点是很容易因为选择的特征值而出现<strong>偏斜（data skew）</strong>问题。如当以用户ID来哈希划分时，某个用户的数据量特别庞大，导致大量的负载压在一个分区上，使其成为<strong>热点（hot spot)</strong>.更糟糕的是，在这种情况下，通过扩展集群规模，并不能将热点的负载分散到其他节点。</p>
+<p>当然，我们可以选择新的数据特征值来重新计算哈希，比如像数据库的联合主键那样，将ID与另一个维度的数据属性组合甚至全部数据计算哈希，但如果这样做，虽然数据会完全打散在集群中，但是数据之间的关联性会消失，当试图读取一个特定的值（比如与某个用户有关的所有数据）时，你不得不并行地查询所有的节点。</p>
+<div class="note note-info">
+            <p>hash 对范围查询并不友好，尤其是范围涉及到的键恰好是用于计算 hash 的主键。不过在范围查询不涉及主键的情况下会有一些特殊的做法，比如查询一个用户在一段时间内的所有记录，可以使用 <em>compound primary key</em>，它是由几列的数值拼接而成的。前面的部分（如user_id）可以决定所在的 partition，而关于这个用户的数据在这个分区像 SST 那样有序排列（字符串排序中，在前半部分相同的情况下，由后半部分的值呈现出一种有序性），这样比单纯地遍历分区中的所有数据并筛选要高效得多。</p>
+          </div>
+
+<div class="note note-info">
+            <p>不同于单纯的 key-value,在很多关系型数据库中还有 secondary index,有时一些请求会直接针对 secondary index 做请求，比如 <em>Table Car(ID,  color, make)<em>，ID是分区的主键，去查询颜色为银色的所有车，如果没有一些针对的处理措施，就必须去访问所有分区的数据。一般有两种方法，</em>document-based partitioning</em>以及<em>term-based partitioning</em> </p>
+          </div>
+
+<h3 id="根据数据范围"><a href="#根据数据范围" class="headerlink" title="根据数据范围"></a>根据数据范围</h3><p>为每个分区（每组机器）指定连续的键范围。</p>
+<img src="/2021/04/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%A7%88/fig6-2.png" srcset="/img/loading.gif" lazyload class="">
+
+<p>键的范围不一定均匀分布，以 DDIA 书中的图来举例，第一卷包含以A和B开头的单词，而第十二卷则包含了从T-Z的单词。这是因为数据量在键范围上的分布并不均匀，某个区间的数据可能要比其它要多得多。</p>
+<p>边界可以手动选择，也可以根据数据量来自动选择，进行动态调整。比如当某个区间的数据量达到阈值时，就自动分裂成两个区间，当有新的节点加入时，就可以分配给它们达到均衡的目的</p>
+<p>但是这种划分方式要求系统维护的元数据（数据分布信息）规模比较庞大，且随着集群规模的增长，元数据服务很容易成为瓶颈。</p>
+<p>在DDIA中也提到，Key Range同样可能会因为特定的访问模式和键的选取而导致热点。在键是时间戳的情况下，分区对应时间范围，在一些业务中，一天访问的数据很可能大部分都属于今天（比如新闻网站），那么今天对应的分区就会成为热点。在这种情况下，可以考虑重新选取适当的key进行区域划分。</p>
+<h3 id="一致性哈希"><a href="#一致性哈希" class="headerlink" title="一致性哈希"></a>一致性哈希</h3><p>一致性哈希可谓大名鼎鼎，很多面试相关的书都会提到它。其将数据按照特征值映射到一个首尾相接的 hash 环上，同时也将节点映射到这个环上。数据从环上的位置 开始顺时针遇到的第一个节点就是其负责节点。一致性哈希需要将节点在环上的位置作为元数据进行管理，但总体来说这个数据规模要比 Key Range 要小得多</p>
+<p>一致性哈希与哈希方式相比，其拓展性要好不少，每次添加或删除节点仅影响其相邻节点 ，<strong>然而仅影响相邻节点也成为它的缺陷</strong>，当节点异常从环上删除时，其负责的数据全部由下一个节点承担，导致其压力突增。</p>
+<p>因此，一般会引入<strong>虚拟节点 （virtual node）</strong>来改善这个问题。在初始创建比较多的虚拟节点分布在环上，并由一个物理节点映射多个虚拟节点。在访问数据时，通过哈希值先找到虚拟节点，然后访问元数据服务器根据映射关系找到实际负责的物理节点。当一个物理节点失效时，环上的多个虚拟节点同时失效，其负载会均摊给多个节点；增加节点时同理。</p>
+<p>但是，<strong>There is no free lunch</strong>.引入虚拟节点后其需要维护的元数据也会增加，一部分来自于虚拟节点在环上的位置，一部分则是映射关系。</p>
+<h4 id="一些补充"><a href="#一些补充" class="headerlink" title="一些补充"></a>一些补充</h4><p>使用 hash 相比于Range Based 能更好地解决热点问题，因为可以把某种访问数据上的局部性（频繁访问某个范围上的数据）进行均摊。但是它并不能完全避免它，前面也提到了很可能有大量的访问针对同一个键。</p>
+<p>hash 的优点也使得它失去了高效执行范围查询的能力，相邻的键分散在所有分区中，它们的顺序丢失了。此时查询不得不从多组机器上读取数据并进行合并。再一次，<strong>There is no free lunch</strong>.</p>
+<p>所以设计时可以根据业务模型灵活选择，或者采取 hybrid 的策略，只对少量火爆的主键进行 hash 处理</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Distributed-System/">Distributed System</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/05/26/Kubernetes%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0%E6%95%B4%E7%90%86/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Kubernetes网络学习整理</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.lazyComments('waline', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/@waline/client@0.14.8/dist/Waline.min.js', function () {
+        new Waline({
+          el: "#waline",
+          placeholder: "说点什么",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: true,
+          serverURL: "https://imnerd-api-steel.vercel.app/",
+          avatarCDN: "",
+          avatarForce: false,
+          requiredFields: [],
+          emojiCDN: "",
+          emojiMaps: {},
+          anonymous: null,
+        });
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the
+    <a target="_blank" href="https://waline.js.org" rel="nofollow noopener noopener">comments powered by Waline.</a>
+  </noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

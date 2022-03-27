@@ -1,0 +1,571 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Rickicon2.ico">
+  <link rel="icon" href="/img/Rickicon2.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="google-site-verification" content="2LnXQIXdhJV_gy8RXbAXgNcNzhllQC_Me3_qlIIkC3I" /> <meta name="baidu-site-verification" content="code-Y5g1WZqiGT" />
+  
+  <title>How https work? - Flaglord</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"flaglord.com","root":"/","version":"1.8.9a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":6},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Flaglord's Space</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/banner.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="How https work?">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-09-02 18:03" pubdate>
+        2021年9月2日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.6k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      20
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">How https work?</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2022年3月26日 下午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <p>讲 https 的文章其实已经挺多了，在这里不赘述了，可以参考 Cloudflare 官网上的这篇文章<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="What happens in a YLS handshake?
+">[1]</span></a></sup>以及 <strong>The First Few Milliseconds of an HTTPS Connection</strong><sup id="fnref:2" class="footnote-ref"><a href="#fn:2" rel="footnote"><span class="hint--top hint--rounded" aria-label="The First Few Milliseconds of an HTTPS Connection
+">[2]</span></a></sup></p>
+<p>在这里主要是讲讲在 TLS 中为什么需要 Client Random 以及 Server Random. </p>
+<h2 id="导言"><a href="#导言" class="headerlink" title="导言"></a>导言</h2><p>首先先从 https 如何防止 MITM(Man-In-The-Middle Attack, 即中间人攻击)说起。</p>
+<p>一旦 Client 和 Server 完成 TLS 握手，接下来的会话都会通过商议得到的 master_secret 进行对称加密, 只要保证 master_secret 的安全性，那么通信过程的机密性就能得到保障。</p>
+<p>对称加密的问题在于 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Key_exchange">Key exchange</a>，如果 master_secret 被窃取，那么通信报文可以随意被 attcker 加解密，所以这也是为什么 https 会在 TLS 握手阶段用到非对称加密。</p>
+<p>在 TLS 握手阶段，client 会使用 server 的 public key 来加密 pre_master_secret （client 选取的随机字符串），MITM Attacker 由于没有 server 的 private key，所以无法获取 pre_master_master. 而由于 master_secret 由 pre_master_secret、 Client Random 以及 Server Random 构成，attacker 也无法获取到最终加密通信使用的 master secret.</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs arduino">master_secret = <span class="hljs-built_in">PRF</span>(pre_master_secret, <br>                    <span class="hljs-string">&quot;master secret&quot;</span>, <br>                    ClientHello.random + ServerHello.random)<br></code></pre></td></tr></table></figure>
+
+<p><em>PRF : Pesudo Random Function</em></p>
+<h3 id="Does-DNS-posisoning-compromise-TLS"><a href="#Does-DNS-posisoning-compromise-TLS" class="headerlink" title="Does DNS posisoning compromise TLS?"></a>Does DNS posisoning compromise TLS?</h3><p>这是我原先的一个困惑：DNS posioning 会不会让 client 误以为自己在跟真实的 server 通信从而损害 TLS 的安全性？<sup id="fnref:3" class="footnote-ref"><a href="#fn:3" rel="footnote"><span class="hint--top hint--rounded" aria-label="Can a HTTPS connection be compromised because of a rogue DNS server
+">[3]</span></a></sup></p>
+<p>其实这本质上是跟 TLS 如何防止 MITM 是一样的，在这里 certificate 发挥着很关键的作用。</p>
+<p>如果 DNS 被劫持，client 的请求将重定向到 fake IP，那么：</p>
+<ul>
+<li>Attacker 不做任何伪装,如果我们在使用浏览器浏览网站内容，很明显能够发现与 original host 的不同</li>
+<li>如果 attacker 复刻原网址的内容，由于使用 https, client 会要求 server 提供 certficate, 考虑两种情况 <ul>
+<li>attacker 将 original host 的 certificate 提供给 client, 由于 attacker 不知道 private key，attacker 将无法完成跟 client 的 TLS handshake </li>
+<li>attacker 可能会考虑去伪造 certificate, 比如 Self-Signed Certificate（自签名证书），我们使用 OpenSSL 命令就可以签发，但是由于不被浏览器信任的 CA 签名认证（所谓签名认证，即用 CA 的 private key 对证书打包的信息进行加密），所以浏览器会发出告警，提示为不安全 （虽然根据我的日常使用经验来说，很多人会点继续信任…）</li>
+</ul>
+</li>
+</ul>
+<p>证书体系严重依赖 CA，所以如果 client 信任了一个不值得信任的 CA，比如 attacker 偷取了 CA 的密钥或者 CA 本身就是恶意的，理论上它可以随意签发证书来进行欺骗；或者 Attacker 攻击 client，在 client 浏览器信任的根证书中注入了 fake CA，那么 Attacker 就可以针对被攻击的 client 随意产生证书<sup id="fnref:4" class="footnote-ref"><a href="#fn:4" rel="footnote"><span class="hint--top hint--rounded" aria-label="SSL and man-in-the-middle misunderstanding
+">[4]</span></a></sup></p>
+<h2 id="没有被加密传输的-Random-到底扮演着什么样的角色？"><a href="#没有被加密传输的-Random-到底扮演着什么样的角色？" class="headerlink" title="没有被加密传输的 Random 到底扮演着什么样的角色？"></a>没有被加密传输的 Random 到底扮演着什么样的角色？</h2><p>前面提到 master_secret 其实是由 pre_master_secret、Client Random 以及 Server Random，而在 client Random 以及 server Random 传输时没有被加密保护，它们都是可以被窃听的，master_secret 的可靠性主要依赖于被 public key 加密传输的 pre_master_secret，既然如此，传输 Client Random 以及 Server Random 是否是多余的操作？<sup id="fnref:5" class="footnote-ref"><a href="#fn:5" rel="footnote"><span class="hint--top hint--rounded" aria-label="Why does the SSL/TLS handshake have a client and server random?
+">[5]</span></a></sup></p>
+<h3 id="为什么使用-Server-Random"><a href="#为什么使用-Server-Random" class="headerlink" title="为什么使用 Server Random"></a>为什么使用 Server Random</h3><p>如果没有 Server Random，意味着 key generation 完全依赖 client generated values（pre_master_secret 是由 client 产生决定的）， 会使得 client 容易遭受 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Replay_attack">replay attack</a>.</p>
+<p>Attacker 完全不需要知道 client 加密发送的 pre_master_secret 具体是什么：它可以向 server 先发送相同的 Client Random,然后把加密后的 pre_master_secret 原封不动地发给 server,那么 attacker 与 server 的通信将使用跟 client 相同的 master_secret. 在这里 attacker 并不知道 master_secret 具体是什么（因为 pre_master_secret 并没有真正被 attacker 破解获取），这也意味着 attacker 不能使用 master_secret 伪造新的报文，但是它可以把 client 的 encrypted traffic 原封不动地发送给 server ，给你带来一些意向不到的麻烦（比如你发现自己莫名其妙地买了原先数量十倍的商品）<sup id="fnref:6" class="footnote-ref"><a href="#fn:6" rel="footnote"><span class="hint--top hint--rounded" aria-label="Why using the premaster secret directly would be vulnerable to replay attack?
+">[6]</span></a></sup></p>
+<p>如果加入 Server Random，每段连接会有不同的 Server Random，最后会有完全不同的 master_secret，attack 就不能使用 client 的 encrypted traffic 干坏事了。</p>
+<div class="note note-info">
+            <p>这边的 replay attack 容易产生一个新的疑问：Server Random 不同是因为 attacker 跟 server 创建了新的连接，如果 attacker 在受害者 handshake 后使用它的连接来重复发送 encrypted packets 该怎么办？在这种情况下，似乎即便有 master_secret 也完全无法防范这种情况…</p><p>SE 上这个问题回答的评论区也有同样的疑问<sup id="fnref:6" class="footnote-ref"><a href="#fn:6" rel="footnote"><span class="hint--top hint--rounded" aria-label="Why using the premaster secret directly would be vulnerable to replay attack?">[6]</span></a></sup>： <strong>Why would the MITM need a new connection to replay the attack?</strong></p><blockquote><p>That could almost be a new question in itself, but the short answer is that the MAC for each record includes a sequence number, so re-sending the first record after the 1000th record would cause the MAC verification to fail. This also prevents an attacker from arbitrarily reordering, duplicating, or dropping records without causing the connection to fail. </p></blockquote>
+          </div>
+
+<p><em>还有一点需要注意，TLS 本身并不会阻止 client 来 replay a request. Server 应该尝试从 application level 上去解决这个问题（比如给你的购买操作编号或者其他一些能做到幂等性的保障措施）. 这些独立于 TLS 本身，但是却也能在上面提到的场景中阻止 attacker 干坏事<sup id="fnref:8" class="footnote-ref"><a href="#fn:8" rel="footnote"><span class="hint--top hint--rounded" aria-label="Are SSL encrypted requests vulnerable to Replay Attacks?
+">[8]</span></a></sup></em></p>
+<h3 id="为什么使用-Client-Random"><a href="#为什么使用-Client-Random" class="headerlink" title="为什么使用 Client Random"></a>为什么使用 Client Random</h3><p>根据在 SE 上的一篇回答的评论区，不使用 Client Random 不会直接对 TLS 造成威胁<sup id="fnref:7" class="footnote-ref"><a href="#fn:7" rel="footnote"><span class="hint--top hint--rounded" aria-label="Why does the SSL/TLS handshake have a client random?
+">[7]</span></a></sup>：pre_master_secret 来自于 client, 而 Server Random 来自于 server, 对于会话的双方来说 master_secret 仍然是随机的。</p>
+<p>而对于高票回答的<em>feed obsolete information</em>，如何 replay 我不是太能理解，正如前面所说，如果 attacker 不能复用 handshake 后的连接，在新的连接中，attacker 是完全无法预测到 client 会发送什么样的 pre_master_secret</p>
+<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p>前面提到的主要是针对 RSA，DHE 有些不太一样，两者之间的区别可以参考一下:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.cloudflare.com/zh-cn/learning/ssl/what-happens-in-a-tls-handshake/">What is keyless SSL?</a></li>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange#Description">Diffie–Hellman key exchange</a></li>
+<li><a target="_blank" rel="noopener" href="https://security.stackexchange.com/questions/45963/diffie-hellman-key-exchange-in-plain-english">Diffie-Hellman Key Exchange algorithm in plain English</a></li>
+</ul>
+<p>Client Random 和 Server Random 其实是 g (public prime base) 以及 p (public prime modules)</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.cloudflare.com/zh-cn/learning/ssl/what-happens-in-a-tls-handshake/">What happens in a YLS handshake?</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="http://www.moserware.com/2009/06/first-few-milliseconds-of-https.html">The First Few Milliseconds of an HTTPS Connection</a>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://security.stackexchange.com/questions/3857/can-a-https-connection-be-compromised-because-of-a-rogue-dns-server">Can a HTTPS connection be compromised because of a rogue DNS server</a>
+<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:4" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/14907581/ssl-and-man-in-the-middle-misunderstanding">SSL and man-in-the-middle misunderstanding</a>
+<a href="#fnref:4" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:5" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://security.stackexchange.com/questions/89383/why-does-the-ssl-tls-handshake-have-a-client-and-server-random">Why does the SSL/TLS handshake have a client and server random?</a>
+<a href="#fnref:5" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:6" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://security.stackexchange.com/questions/218491/why-using-the-premaster-secret-directly-would-be-vulnerable-to-replay-attack">Why using the premaster secret directly would be vulnerable to replay attack?</a>
+<a href="#fnref:6" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:7" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://security.stackexchange.com/questions/157684/why-does-the-ssl-tls-handshake-have-a-client-random">Why does the SSL/TLS handshake have a client random?</a>
+<a href="#fnref:7" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:8" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://security.stackexchange.com/questions/20105/are-ssl-encrypted-requests-vulnerable-to-replay-attacks">Are SSL encrypted requests vulnerable to Replay Attacks?</a>
+<a href="#fnref:8" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/https/">https</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/09/07/Is-KMP-always-faster/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Is KMP always faster?</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/07/31/Consistency-and-consensus/">
+                        <span class="hidden-mobile">Consistency and consensus</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.lazyComments('waline', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/@waline/client@0.14.8/dist/Waline.min.js', function () {
+        new Waline({
+          el: "#waline",
+          placeholder: "说点什么",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: true,
+          serverURL: "https://imnerd-api-steel.vercel.app/",
+          avatarCDN: "",
+          avatarForce: false,
+          requiredFields: [],
+          emojiCDN: "",
+          emojiMaps: {},
+          anonymous: null,
+        });
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the
+    <a target="_blank" href="https://waline.js.org" rel="nofollow noopener noopener">comments powered by Waline.</a>
+  </noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
