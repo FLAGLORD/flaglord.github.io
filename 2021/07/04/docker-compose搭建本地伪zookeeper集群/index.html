@@ -242,11 +242,11 @@
 <h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h2><h3 id="开启-Hyper-V"><a href="#开启-Hyper-V" class="headerlink" title="开启 Hyper-V"></a>开启 Hyper-V</h3><p>确保你开启了 Hyper-V,可以使用管理员身份运行 PowerShell 或者 Terminal，输入命令<code> bcdedit /set hypervisorlaunchtype auto</code>并进行重启，<em>注意虚拟机软件 VMWARE 以及 VirtualBox 一些版本与 Hyper-v 存在冲突，如果想要使用它们，需要关闭 Hyper-V,使用命令<code>bcdedit /set hypervisorlaunchtype off</code></em></p>
 <h3 id="搜索-zookeeper-镜像"><a href="#搜索-zookeeper-镜像" class="headerlink" title="搜索 zookeeper 镜像"></a>搜索 zookeeper 镜像</h3><p>打开 PowerShell 输入<code>docker search zookeeper</code>，如果提示 docker 命令无法识别，请下载 docker 并将其加入电脑的环境变量 Path 中，路径名一般为<code>#安装路径\Docker\Docker\resources\bin</code>.</p>
 <p>如果出现以下场景</p>
-<img src="/2021/07/04/docker-compose%E6%90%AD%E5%BB%BA%E6%9C%AC%E5%9C%B0%E4%BC%AAzookeeper%E9%9B%86%E7%BE%A4/image-20210704121548110.png" srcset="/img/loading.gif" lazyload class="" alt="image-20210704121548110">
+<img src="/2021/07/04/docker-compose%E6%90%AD%E5%BB%BA%E6%9C%AC%E5%9C%B0%E4%BC%AAzookeeper%E9%9B%86%E7%BE%A4/image-20210704121548110.png" srcset="/img/loading.gif" lazyload class="" title="image-20210704121548110">
 
 <p>以管理员身份运行 cmd，在<code>#安装路径\Docker\Docker</code>路径下运行<code>DockerCli.exe -SwitchDaemon</code>，再次尝试使用<code>docker search</code>，如果仍然不行，请重新安装 Docker</p>
 <p>搜索后会出现</p>
-<img src="/2021/07/04/docker-compose%E6%90%AD%E5%BB%BA%E6%9C%AC%E5%9C%B0%E4%BC%AAzookeeper%E9%9B%86%E7%BE%A4/image-20210704122624059.png" srcset="/img/loading.gif" lazyload class="" alt="image-20210704122624059">
+<img src="/2021/07/04/docker-compose%E6%90%AD%E5%BB%BA%E6%9C%AC%E5%9C%B0%E4%BC%AAzookeeper%E9%9B%86%E7%BE%A4/image-20210704122624059.png" srcset="/img/loading.gif" lazyload class="" title="image-20210704122624059">
 
 <p>使用 apache 的官方镜像即可，使用<code>docker pull zookeeper</code>进行下载</p>
 <h2 id="docker-compose-启动集群"><a href="#docker-compose-启动集群" class="headerlink" title="docker-compose 启动集群"></a>docker-compose 启动集群</h2><p><code>docker-compose.yml</code>文件内容如下</p>
@@ -254,20 +254,20 @@
 
 <p><em>注意：如果你的 docker-compose 版本小于 1.27.0，请在文件开头指定 version</em></p>
 <p>这边除了<code>docker-compose.yml</code>，我还创建了zk1、zk2、zk3 三个文件夹供容器挂载使用</p>
-<img src="/2021/07/04/docker-compose%E6%90%AD%E5%BB%BA%E6%9C%AC%E5%9C%B0%E4%BC%AAzookeeper%E9%9B%86%E7%BE%A4/image-20210704123354987.png" srcset="/img/loading.gif" lazyload class="" alt="image-20210704123354987">
+<img src="/2021/07/04/docker-compose%E6%90%AD%E5%BB%BA%E6%9C%AC%E5%9C%B0%E4%BC%AAzookeeper%E9%9B%86%E7%BE%A4/image-20210704123354987.png" srcset="/img/loading.gif" lazyload class="" title="image-20210704123354987">
 
 <p>使用<code>docker-compose up -d</code>启动集群</p>
-<img src="/2021/07/04/docker-compose%E6%90%AD%E5%BB%BA%E6%9C%AC%E5%9C%B0%E4%BC%AAzookeeper%E9%9B%86%E7%BE%A4/image-20210704123633354.png" srcset="/img/loading.gif" lazyload class="" alt="image-20210704123633354">
+<img src="/2021/07/04/docker-compose%E6%90%AD%E5%BB%BA%E6%9C%AC%E5%9C%B0%E4%BC%AAzookeeper%E9%9B%86%E7%BE%A4/image-20210704123633354.png" srcset="/img/loading.gif" lazyload class="" title="image-20210704123633354">
 
 <p>使用<code>docker-compose ps</code>进行 查看</p>
-<img src="/2021/07/04/docker-compose%E6%90%AD%E5%BB%BA%E6%9C%AC%E5%9C%B0%E4%BC%AAzookeeper%E9%9B%86%E7%BE%A4/image-20210704123724798.png" srcset="/img/loading.gif" lazyload class="" alt="image-20210704123724798">
+<img src="/2021/07/04/docker-compose%E6%90%AD%E5%BB%BA%E6%9C%AC%E5%9C%B0%E4%BC%AAzookeeper%E9%9B%86%E7%BE%A4/image-20210704123724798.png" srcset="/img/loading.gif" lazyload class="" title="image-20210704123724798">
 
 <p>使用<code>docker-compose stop</code> 停止</p>
-<img src="/2021/07/04/docker-compose%E6%90%AD%E5%BB%BA%E6%9C%AC%E5%9C%B0%E4%BC%AAzookeeper%E9%9B%86%E7%BE%A4/image-20210704123859881.png" srcset="/img/loading.gif" lazyload class="" alt="image-20210704123859881">
+<img src="/2021/07/04/docker-compose%E6%90%AD%E5%BB%BA%E6%9C%AC%E5%9C%B0%E4%BC%AAzookeeper%E9%9B%86%E7%BE%A4/image-20210704123859881.png" srcset="/img/loading.gif" lazyload class="" title="image-20210704123859881">
 
 <p>使用<code>docker exec -it zk1 /bin/bash</code>进入 zk1 容器内部（进入其他容器同理）</p>
 <p><code>cd bin</code>-&gt;<code>ls</code>进行查看</p>
-<img src="/2021/07/04/docker-compose%E6%90%AD%E5%BB%BA%E6%9C%AC%E5%9C%B0%E4%BC%AAzookeeper%E9%9B%86%E7%BE%A4/image-20210704124023023.png" srcset="/img/loading.gif" lazyload class="" alt="image-20210704124023023">
+<img src="/2021/07/04/docker-compose%E6%90%AD%E5%BB%BA%E6%9C%AC%E5%9C%B0%E4%BC%AAzookeeper%E9%9B%86%E7%BE%A4/image-20210704124023023.png" srcset="/img/loading.gif" lazyload class="" title="image-20210704124023023">
 
 <p>使用<code>./zkCli.sh</code>进行客户端连接，你可以使用输入一些 zookeeper 命令进行验证</p>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><blockquote>

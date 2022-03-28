@@ -240,9 +240,9 @@
             <div class="markdown-body">
               <p>昨天师兄让我基于他的例子用技术栈重写监控脚本时，需要从 master 获取最新的提交。之前在学校也有过一些使用 git 进行团队协作的经历，所以出于习惯使用了<code>(MyBranch)$ git merge master</code> 。使用 git log 检查提交记录时发现 log 非常混乱，师兄提醒我说从 master 获取时最好使用<code>git rebase</code>,因为这个大库有很多人在开发，master 分支异常活跃，与学校小组作业 3-4人的开发完全不同。在这里系统地学习一些 <code>git base</code>以及 <code>git merge</code>在使用上的区别</p>
 <p>merge 和 commit 都是将一个分支的变化合并进另一个分支，但是它们工作方式上有一些区别,以下是示意图</p>
-<img src="/2021/07/09/%E5%85%B3%E4%BA%8Egit-rebase/02-Merging-main-into-the-feature-branh.svg" srcset="/img/loading.gif" lazyload class="" alt="Merging master into the feature branch">
+<img src="/2021/07/09/%E5%85%B3%E4%BA%8Egit-rebase/02-Merging-main-into-the-feature-branh.svg" srcset="/img/loading.gif" lazyload class="" title="Merging master into the feature branch">
 
-<img src="/2021/07/09/%E5%85%B3%E4%BA%8Egit-rebase/03-Rebasing-the-feature-branch-into-main.svg" srcset="/img/loading.gif" lazyload class="" alt="Rebasing the feature branch onto master">
+<img src="/2021/07/09/%E5%85%B3%E4%BA%8Egit-rebase/03-Rebasing-the-feature-branch-into-main.svg" srcset="/img/loading.gif" lazyload class="" title="Rebasing the feature branch onto master">
 
 <p>merge 会保留一个有用的，语义化的</p>
 <p>rebase 会移除整个 feature 分支，并在 main 分支的基础上重写原先 feature 分支的提交记录，这样 project history 会更加清晰、简练并且是 linear 的。</p>
@@ -260,18 +260,18 @@
 <p>如果异常退出 vi 编辑窗口</p>
 <p>使用<code>git rebase --edit-todo</code>继续编辑，修改后使用<code>git rebase --continue</code>保存</p>
 <h3 id="Workflow"><a href="#Workflow" class="headerlink" title="Workflow"></a>Workflow</h3><p>在工作中我们经常会需要开发新 feature，我们一般不会直接在 master 做更新，一般会创建一个专有分支来进行开发，如图所示</p>
-<img src="/2021/07/09/%E5%85%B3%E4%BA%8Egit-rebase/06-Developing-a-feature-in-a-dedicated-branch.svg" srcset="/img/loading.gif" lazyload class="" alt="Developing a feature in a dedicated branch">
+<img src="/2021/07/09/%E5%85%B3%E4%BA%8Egit-rebase/06-Developing-a-feature-in-a-dedicated-branch.svg" srcset="/img/loading.gif" lazyload class="" title="Developing a feature in a dedicated branch">
 
 <p>当开发新 feature 周期比较长时，main 分支时可能有大量的更新，我们可以定时进行 rebase，确保我们的 feature 时有意义的（可以及时发现可能存在的冲突），我们有两个选择：</p>
 <ol>
 <li>基于 feature 的父分支（比如 main），这种情况在前面讲 merge 和 rebase 区别时已经提到了</li>
 <li>基于 feature 分支的之前的提交版本，执行<code>git rebase -i HEAD~3</code>可以用来合并最近的 3 次提交记录（base 正是 <code>HEAD～3</code>），这种情况其实主要是为了合并提交日志，它不会囊括上游的变化</li>
 </ol>
-<img src="/2021/07/09/%E5%85%B3%E4%BA%8Egit-rebase/07-Rebasing-into-Head-3.svg" srcset="/img/loading.gif" lazyload class="" alt="Rebasing onto Head~3">
+<img src="/2021/07/09/%E5%85%B3%E4%BA%8Egit-rebase/07-Rebasing-into-Head-3.svg" srcset="/img/loading.gif" lazyload class="" title="Rebasing onto Head~3">
 
 <h2 id="一些注意点"><a href="#一些注意点" class="headerlink" title="一些注意点"></a>一些注意点</h2><h3 id="Note1"><a href="#Note1" class="headerlink" title="Note1"></a><em>Note1</em></h3><p><strong>Never use rebase on</strong> <em><strong>public</strong></em> <strong>branch!</strong></p>
 <p>如果 rebase main onto feature, git 会人会你的 main 分支已经与其他人的 main 分支偏离了</p>
-<img src="/2021/07/09/%E5%85%B3%E4%BA%8Egit-rebase/05-Rebasing-the-main-branch.svg" srcset="/img/loading.gif" lazyload class="" alt="Rebasing the master branch">
+<img src="/2021/07/09/%E5%85%B3%E4%BA%8Egit-rebase/05-Rebasing-the-main-branch.svg" srcset="/img/loading.gif" lazyload class="" title="Rebasing the master branch">
 
 <p>同步两个 main 分支的部分就是 merge，但是这会带来一次额外的 merge commit以及两组包含着相同变更的 commits</p>
 <h3 id="Note2"><a href="#Note2" class="headerlink" title="Note2"></a><em>Note2</em></h3><p>当你发起 pull request 请求后最好不要使用<code>git rebase</code>，因为其他的开发者会看到你的提交，这是它就是<em>public</em> branch.</p>

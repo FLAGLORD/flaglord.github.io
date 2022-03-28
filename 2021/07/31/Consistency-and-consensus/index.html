@@ -242,7 +242,7 @@
 <p>在最为理想的情况下，如果系统提供的是强一致性的保证，针对某一个数据项的更新操作成功后，那么所有的用户都可以立刻读取到更新后的值。但是许多分布式数据库系统为了性能考虑在默认情况下提供的都是 *eventual consistency(最终一致性)*，这表明数据库的不一致状态会<strong>暂时</strong>地持续一段时间，到最后会 <em>converge</em>，变为一致。</p>
 <p>但是 DDIA 中提到这其实是个很弱的保证，因为它没有给出 <em><strong>when the convergence will happen</strong></em> ,所以说如果你写了一个值，立马去读取既有可能得到的是旧值，也有可能得到的是新值,从不一致到一致的时间差往往取决于 network delay，但如果 network delay unbounded,这其实是一件很麻烦的事情。</p>
 <h2 id="Linearizability"><a href="#Linearizability" class="headerlink" title="Linearizability"></a>Linearizability</h2><p> eventually consistent database 中，最大的困惑之处在于在某一时刻你去问不同的副本同一个数据项的值，你可能会得到两个不同的回答（主要原因可能是 replication lag,在更新的日志信息异步复制给其他副本时，一部分已经更新成功了，另一部分还没有收到更新信息）. 所以在这里引出了一个更强一点的一致性模型：<em>Linearizability (也称为 atomic consistency | strong consistency | immediate consistency | external consistency)</em> </p>
-<img src="/2021/07/31/Consistency-and-consensus/fig9-1.png" srcset="/img/loading.gif" lazyload class="" alt="This system is not linearizable,causing football fans to be confused">
+<img src="/2021/07/31/Consistency-and-consensus/fig9-1.png" srcset="/img/loading.gif" lazyload class="" title="This system is not linearizable,causing football fans to be confused">
 
 <p><em>Linearizability</em> 的基本思路是给使用者提供了一种 <em>a single copy of data</em> 的错觉，在上图提到的例子中，Alice 读取到了新的值，那么 Bod 去做读取，他期望得到的结果是至少跟 Alice 一样新的，而在这里返回旧值的行为其实违背了 Linearizability.</p>
 <p>通俗地来解释 Linearizability ，它提供了两个性质：</p>
@@ -254,7 +254,7 @@
             <p>有了第一个性质，第二个性质像是废话。其实不是这样的的，因为理想的 a single copy of data 中， <em>write request should be instantaneous</em>，但是对整个系统而言， write request 从发出请求到收到回应的窗口期中，read request 是有可能和 write request 重叠的，我们不希望 read request 由于路由到不同的副本节点出现 <em>flip back and forth between the new and old value</em> 的情况，所以我们需要新的限制来更好地描述 “a single copy of data” 的行为</p>
           </div>
 
-<img src="/2021/07/31/Consistency-and-consensus/fig9-3.png" srcset="/img/loading.gif" lazyload class="" alt="After any one read has returned the new value, all following reads (on the same or other clients) must also return the new value."></li>
+<img src="/2021/07/31/Consistency-and-consensus/fig9-3.png" srcset="/img/loading.gif" lazyload class="" title="After any one read has returned the new value, all following reads (on the same or other clients) must also return the new value."></li>
 </ul>
 <p> Herlihy 和 Wing 在它们的<a target="_blank" rel="noopener" href="http://cs.brown.edu/~mph/HerlihyW90/p463-herlihy.pdf">论文</a>中更准确地描述了 Linearizability 的正式定义</p>
 <h3 id="Linearizability-versus-Serializability"><a href="#Linearizability-versus-Serializability" class="headerlink" title="Linearizability versus Serializability"></a>Linearizability versus Serializability</h3><p>这一点可以参考一下 Peter Bailis 的这篇文章<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="Linearizability versus Serializability

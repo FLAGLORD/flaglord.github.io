@@ -262,7 +262,7 @@
 <li>因为一个事务并不一定会成功，脏读使得一个事务可能看到稍后会回滚的数据</li>
 </ul>
 <p>很多数据库的文档都没有特别提到脏写这个问题，这边略微提一下</p>
-<img src="/2021/07/25/transaction/fig7-5.png" srcset="/img/loading.gif" lazyload class="" alt="脏写可能会导致不同事务的冲突写入混淆在一起">
+<img src="/2021/07/25/transaction/fig7-5.png" srcset="/img/loading.gif" lazyload class="" title="脏写可能会导致不同事务的冲突写入混淆在一起">
 
 <div class="note note-info">
             <p><em>Dirty writes: One client overwrites data that another client has written, but not yet committed</em> </p>
@@ -276,7 +276,7 @@
             <p><em>Read skew(nonrepeatable reads): A client sees different parts of the database at different points in time.</em></p>
           </div>
 
-<img src="/2021/07/25/transaction/fig7-6.png" srcset="/img/loading.gif" lazyload class="" alt="Alice观察到了处于不一致状态的数据库">
+<img src="/2021/07/25/transaction/fig7-6.png" srcset="/img/loading.gif" lazyload class="" title="Alice观察到了处于不一致状态的数据库">
 
 <h3 id="Repeatable-Read"><a href="#Repeatable-Read" class="headerlink" title="Repeatable Read"></a>Repeatable Read</h3><p>解决不可重复读常用的方法是 <em>Snapshot Isolation</em>. </p>
 <div class="note note-secondary">
@@ -293,7 +293,7 @@
             <p><em>Lost updates: Two clients concurrently perform a read-modify-write cycle. One overwrites the other’s write without incorporating its changes, so data is lost.</em></p>
           </div>
 
-<img src="/2021/07/25/transaction/fig7-1.png" srcset="/img/loading.gif" lazyload class="" alt="竞争状态下递增计时器">
+<img src="/2021/07/25/transaction/fig7-1.png" srcset="/img/loading.gif" lazyload class="" title="竞争状态下递增计时器">
 
 <p>问题的核心在于 <em>a read-modify-write cycle</em>: 读取当前值，依据当前值计算新值，再将更新后的值写回。MVCC 对这种情况无能为力。</p>
 <h5 id="解决方式"><a href="#解决方式" class="headerlink" title="解决方式"></a>解决方式</h5><ul>

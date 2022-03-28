@@ -258,7 +258,7 @@
 <p>类比：如果 IPVS 为 netfilter,那么 IPVSADM 为 iptables（<em>注：iptables 正是通过 netlink 与 netfilter通信</em>）</p>
 <h3 id="Netfilter-和-IPTABLES"><a href="#Netfilter-和-IPTABLES" class="headerlink" title="Netfilter 和 IPTABLES"></a>Netfilter 和 IPTABLES</h3><p>iptables 在 Docker 以及 K8s 中应用甚广。我的文章<a href="https://flaglord.com/2021/05/26/Kubernetes%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0%E6%95%B4%E7%90%86/">Kubernetes网络学习整理</a>中可以看到 iptables 频繁出现。</p>
 <p>底层的 netfilter 其本质就是在整个网络流程的若干位置放置一些钩子，并在每个钩子上挂载一些处理函数进行处理</p>
-<img src="/2021/07/08/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/netfilter.png" srcset="/img/loading.gif" lazyload class="" alt="netfilter.png">
+<img src="/2021/07/08/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/netfilter.png" srcset="/img/loading.gif" lazyload class="" title="netfilter.png">
 
 <p>IP 层的 5 个钩子点的位置为：</p>
 <ul>
@@ -269,7 +269,7 @@
 <li>OUTPUT</li>
 </ul>
 <p>在 PREROUTING 处可以进行 DNAT，在 POSTROUTING 处可以进行 SNAT，而在 FORWARD 则可以设置一些过滤函数</p>
-<h3 id="LVS工作原理"><a href="#LVS工作原理" class="headerlink" title="LVS工作原理"></a>LVS工作原理</h3><img src="/2021/07/08/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/lvm.svg" srcset="/img/loading.gif" lazyload class="" alt="img">
+<h3 id="LVS工作原理"><a href="#LVS工作原理" class="headerlink" title="LVS工作原理"></a>LVS工作原理</h3><img src="/2021/07/08/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/lvm.svg" srcset="/img/loading.gif" lazyload class="" title="img">
 
 <p>LVS 工作在 INPUT 链上，流程大致如下：</p>
 <ol>
@@ -277,7 +277,7 @@
 <li>如果 VIP 和 端口 确实为 IPVS 服务，INPUT 上挂载的 ipvs_hook函数 会被调用，强制修改数据包的相关数据，送向 OUTPUT 链</li>
 </ol>
 <h3 id="工作方式"><a href="#工作方式" class="headerlink" title="工作方式"></a>工作方式</h3><p>有三种 IP 负载均衡技术：NAT 、IPTunneling 以及 DR</p>
-<h3 id="NAT"><a href="#NAT" class="headerlink" title="NAT"></a>NAT</h3><img src="/2021/07/08/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/lvs_nat.svg" srcset="/img/loading.gif" lazyload class="" alt="img">
+<h3 id="NAT"><a href="#NAT" class="headerlink" title="NAT"></a>NAT</h3><img src="/2021/07/08/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/lvs_nat.svg" srcset="/img/loading.gif" lazyload class="" title="img">
 
 <p>客户端会使用 DNS 解析的 VIP 进行访问，到达 load balancer后，它首先会检查包的 destination address 以及 port number.如果其与 LVS service 相匹配，会根据调度算法从集群中选出一个 RS ，同时包的 destination address 和 port number 会使用 RS 的数据进行重写。包发送向选择的 RS 后，reply 会因为相应的路由规则送给 load balancer(网关)，在里面 source IP 会被重写为 VIP，保持了整个过程对 Client 的透明</p>
 <p><strong>Advantages</strong>:</p>
@@ -291,7 +291,7 @@
 </ul>
 <p>LVS-NAT 复用了 Linux Kernel 中有关 netfilter 以及 iptables 中的相当多的代码，不过它将原本 O(n) 的链式判断变为了 Map O(1) 级别，加快了转发效率。</p>
 <p>除了之后提到的两种工作模式，使用 DNS hybrid 可以解决瓶颈问题，可以有许多 load balancers 共同工作，只需要 DNS Server 解析时使用 Round-Robin 即可 </p>
-<h4 id="IP-Tunneling"><a href="#IP-Tunneling" class="headerlink" title="IP Tunneling"></a>IP Tunneling</h4><img src="/2021/07/08/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/lvs_iptunneling.svg" srcset="/img/loading.gif" lazyload class="" alt="img">
+<h4 id="IP-Tunneling"><a href="#IP-Tunneling" class="headerlink" title="IP Tunneling"></a>IP Tunneling</h4><img src="/2021/07/08/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/lvs_iptunneling.svg" srcset="/img/loading.gif" lazyload class="" title="img">
 
 <p>简单地说就是将原来的 packet 作为 payload 再封装在新的报文中，RS 上的 tun 设备会拆封，然后将 VIP 识别为本机的地址，将 reply 不经 load balance 送回客户端</p>
 <p><strong>Advantages:</strong></p>
