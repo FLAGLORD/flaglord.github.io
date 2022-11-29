@@ -86,14 +86,14 @@
   </url>
   
   <url>
-    <loc>http://flaglord.com/2021/09/29/Vector-C-implementation/</loc>
+    <loc>http://flaglord.com/2021/10/02/UniquePtr-C-implementation/</loc>
     
     <lastmod>2022-11-22</lastmod>
     
   </url>
   
   <url>
-    <loc>http://flaglord.com/2021/10/02/UniquePtr-C-implementation/</loc>
+    <loc>http://flaglord.com/2021/09/29/Vector-C-implementation/</loc>
     
     <lastmod>2022-11-22</lastmod>
     
@@ -235,6 +235,13 @@
   </url>
   
   <url>
+    <loc>http://flaglord.com/tags/goroutine/</loc>
+    <lastmod>2022-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://flaglord.com/tags/https/</loc>
     <lastmod>2022-11-29</lastmod>
     <changefreq>daily</changefreq>
@@ -313,13 +320,6 @@
   
   <url>
     <loc>http://flaglord.com/tags/git/</loc>
-    <lastmod>2022-11-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://flaglord.com/tags/goroutine/</loc>
     <lastmod>2022-11-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
