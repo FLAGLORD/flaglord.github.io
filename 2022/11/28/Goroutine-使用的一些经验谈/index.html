@@ -189,7 +189,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      941 字
+      2.4k 字
     </span>
   
 
@@ -199,7 +199,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      12
+      31
        分钟
     </span>
   
@@ -233,7 +233,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2022年11月28日 晚上
+                  本文最后更新于：2022年11月29日 晚上
                 
               </p>
             
@@ -266,12 +266,78 @@
 <p>一种方法就是将 workFunc 需要的所有参数包装成一个结构体，再拆解传递：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">workerFunc</span><span class="hljs-params">(paramA TypeA, paramB TypeB)</span></span>&#123;<br>  <span class="hljs-comment">// ...</span><br>&#125;<br><br><span class="hljs-keyword">type</span> Params <span class="hljs-keyword">struct</span>&#123;<br>  A TypeA<br>  B TypeB<br>&#125;<br><br>p, _ := ants.NewPoolWithFunc(<span class="hljs-number">10</span>, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(i <span class="hljs-keyword">interface</span>&#123;&#125;)</span></span>&#123;<br>  p, _ := i.(Params) <span class="hljs-comment">// 断言</span><br>  workerFunc(p.A, p.B)<br>  wg.Done()<br>&#125;)<br></code></pre></td></tr></table></figure>
 
-<p>另一种方法就是上面提到的闭包机制。</p>
+<p>另一种方法则是上面提到的闭包机制。</p>
 <h4 id="关于性能"><a href="#关于性能" class="headerlink" title="关于性能"></a>关于性能</h4><p>还是需要强调，在 worker 数量并不大的情况下，协程池能带来的性能提升是极其有限的，尽管可能会有比较明显的内存使用优势（因为复用机制）<sup id="fnref:2" class="footnote-ref"><a href="#fn:2" rel="footnote"><span class="hint--top hint--rounded" aria-label="测试发现使用池计算时间并没有缩短，只有内存占用变小了。
 ">[2]</span></a></sup>，但协程池的使用毕竟增加了复杂度，这点需要进行权衡。</p>
+<h3 id="直接创建新的-Routine"><a href="#直接创建新的-Routine" class="headerlink" title="直接创建新的 Routine"></a>直接创建新的 Routine</h3><p>除了使用协程池去对 Goroutine 进行复用，还可以直接创建新的 Goroutine ，需要的则是添加一些对数量进行限制的逻辑：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> wg sync.WaitGroup<br><br>workerLimiter := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">struct</span>&#123;&#125;, workerNum)<br><span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; runTimes; i++ &#123;<br>    wg.Add(<span class="hljs-number">1</span>)<br>    workLimiter &lt;- <span class="hljs-keyword">struct</span>&#123;&#125;&#123;&#125;<br>    <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(data ParamStruct)</span></span>&#123;<br>	      workerFunc(data)<br>      <br>        wg.Done()<br>      	&lt;-workerLimiter<br>    &#125;(yourData)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>核心思想就是使用空结构体的带有缓冲的<code>channel</code>，利用缓冲区满时 Block 的性质可以很容易地控制并发的数量。</p>
+<div class="note note-warning">
+            <p>这里很推荐将任务逻辑包装成一个<code>workerFunc</code>；尽管不那么做也可以，比如像下面这样：</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(data ParamStruct)</span></span>&#123;<br>      <span class="hljs-comment">// your task logic </span><br>  			...<br>  <br>       wg.Done()<br>     	&lt;-workerLimiter<br>   &#125;(yourData)<br></code></pre></td></tr></table></figure><p>但是这里会有一些潜藏的风险，如果你的逻辑中有多个 return，最容易出现的错误就是<strong>只在末尾添加<code>&lt;-workerLimiter</code>和<code>wg.Done()</code>，</strong>一旦执行不到末尾而提前 return，就有可能会造成程序的阻塞：</p><ul><li>如果 worker 数量大于等于 task 数量，会在<code>wg.Wait()</code>时阻塞</li><li>如果 worker 数量小于 task 数量，则会在<code>workLimiter &lt;- struct{}{}</code>处阻塞</li></ul><p>为了避免遗忘添加，最好的方法就是使用<code>defer</code>，不过由于<code>defer</code>只能和函数连用，所以将相关资源释放的逻辑整合到同一个函数中：</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;<br>  wg.Done()<br>  &lt;-workerLimiter<br>&#125;<br></code></pre></td></tr></table></figure>
+          </div>
+
+<h2 id="收集数据"><a href="#收集数据" class="headerlink" title="收集数据"></a>收集数据</h2><p>使用 Goroutine 往往是为了将比较多的数据进行分批处理从而加快执行速度，所以一般最后需要对 worker 处理得到的结果进行汇集。</p>
+<p>如果结果可以存储在 map 确定的 key 对应的位置或者数组中某个确定的 index 对应的位置中，那么无需担心并发访问的问题。但如果只是将结果添加到数组末尾，且添加位置取决于完成的先后顺序，那么需要考虑 thread-safe 的问题。</p>
+<h3 id="使用-sync-Mutex-来保护"><a href="#使用-sync-Mutex-来保护" class="headerlink" title="使用 sync.Mutex 来保护"></a>使用 sync.Mutex 来保护</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span>&#123;<br>    finalRes	[]ResStruct&#123;&#125;<br>    wg 			sync.WaitGroup<br>    mu			sync.Mutex<br>&#125;<br><span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; runTimes; i++ &#123;<br>    wg.Add(<span class="hljs-number">1</span>)<br>    <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(data YourStruct)</span></span>&#123;<br>        <span class="hljs-keyword">defer</span> wg.Done()<br>      <br>        <span class="hljs-keyword">var</span> res ResStruct&#123;&#125;<br>        <span class="hljs-comment">// your task logic</span><br>      	...<br>        <br>      	mu.Lock()<br>        fianlRes = <span class="hljs-built_in">append</span>(finalRes, res)<br>    		mu.Unlock()<br>    &#125;(yourData)<br>&#125;<br>wg.Wait()<br></code></pre></td></tr></table></figure>
+
+<p>最直接的方法就是使用<code>sync.Mutex</code>来做同步。</p>
+<h3 id="使用-channel-来收集数据"><a href="#使用-channel-来收集数据" class="headerlink" title="使用 channel 来收集数据"></a>使用 channel 来收集数据</h3><p><code>channel</code>本身是 thread-safe 的，使用<code>channel</code>去做同步也是官方推荐的一种方法：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span>&#123;<br>    finalRes	[]ResStruct&#123;&#125;<br>    wg 			sync.WaitGroup<br>&#125;<br>resChan := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> ResStruct&#123;&#125;)<br><span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; runTimes; i++ &#123;<br>    wg.Add(<span class="hljs-number">1</span>)<br>    <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(data YourStruct)</span></span>&#123;<br>        <span class="hljs-keyword">defer</span> wg.Done()<br>      <br>      	<span class="hljs-keyword">var</span> res ResStruct&#123;&#125;<br>        <span class="hljs-comment">// your task logic</span><br>      <br>        resChan &lt;- res<br>    &#125;(yourData)<br>&#125;<br><br><span class="hljs-comment">// important</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;<br>    wg.Wait()<br>    <span class="hljs-built_in">close</span>(resChan)<br>&#125;()<br><br><span class="hljs-comment">// Position 1</span><br><span class="hljs-keyword">for</span> res := <span class="hljs-keyword">range</span> resChan&#123;<br>    finalRes = <span class="hljs-built_in">append</span>(finalRes, res)    <br>&#125;<br><span class="hljs-comment">// Position 2</span><br></code></pre></td></tr></table></figure>
+
+<p>在代码中，worker routine 中将任务结果发送到<code>channel</code> 中，在主 routine 中（区分于<code>go</code>关键词创建的 routine）使用<code>for</code>从<code>channel</code>中不断地收集数据；</p>
+<div class="note note-info">
+            <p>为了能够让主 routine 及时退出循环，这里需要<em><strong>使用另一个单独的 routine</strong></em> 来负责在所有任务完成后关闭<code>channel</code>，这段逻辑如果写在主 routine 的任何地方都会导致阻塞<sup id="fnref:3" class="footnote-ref"><a href="#fn:3" rel="footnote"><span class="hint--top hint--rounded" aria-label="Why does the use of an unbuffered channel in the same goroutine result in a deadlock?">[3]</span></a></sup>：</p><ul><li>如果在 Position 1 处，由于 unbuffered channel 可以看作 always-full，在没有人从<code>resChan</code>处接收数据时，worker routine 作为 sender 会阻塞，这意味着<code>wg.Done()</code>永远无法被执行，则<code>wg.Wait()</code>永远无法退出，从而造成主 routine 的阻塞</li><li>如果在 Position 2 处，由于没有人去 close channel，主 routine 永远无法退出<code>for</code> 循环</li></ul>
+          </div>
+
+<p>由于这些要注意的点，这么写确实显得很麻烦，远不如前一种那么简单直观，在多数情况下我也推荐第一种，但是有一些很特别的情况，比如你既不想使用<code>goto</code>同时你又不希望执行到底部，想要提前退出并发送 res，在这种情况下，前一种方法需要写</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go">mu.Lock()<br>fianlRes = <span class="hljs-built_in">append</span>(finalRes, res)<br>mu.Unlock()<br><span class="hljs-keyword">return</span><br></code></pre></td></tr></table></figure>
+
+<p>后一种方法则只需要写</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">resChan &lt;- res<br><span class="hljs-keyword">return</span><br></code></pre></td></tr></table></figure>
+
+<p>尤其在这样的代码段可能会在你的 task 逻辑中大量反复出现时，后一种方法形势上要更整洁统一。</p>
+<h2 id="如何在-Goroutine-中处理错误"><a href="#如何在-Goroutine-中处理错误" class="headerlink" title="如何在 Goroutine 中处理错误"></a>如何在 Goroutine 中处理错误</h2><p>在使用 Goroutine 的一些场景中，worker 可能会在执行过程中产生一些<code>error</code>，关于如何处理，<a target="_blank" rel="noopener" href="https://github.com/golang/sync">Go Sync</a>提供了一个强大的“武器”——<a target="_blank" rel="noopener" href="https://github.com/golang/sync/blob/master/errgroup/errgroup.go"><code>errgroup.Group</code></a></p>
+<p>后续有空的话会进一步拓展这个话题，有一些代码片段可供参考<sup id="fnref:4" class="footnote-ref"><a href="#fn:4" rel="footnote"><span class="hint--top hint--rounded" aria-label="errgroup_example_md5all_test.go
+">[4]</span></a></sup><sup id="fnref:5" class="footnote-ref"><a href="#fn:5" rel="footnote"><span class="hint--top hint--rounded" aria-label="another errgroup example
+">[5]</span></a></sup>，这篇博文<sup id="fnref:6" class="footnote-ref"><a href="#fn:6" rel="footnote"><span class="hint--top hint--rounded" aria-label=" Why you should be using errgroup.WithContext() in your Golang server handlers
+">[6]</span></a></sup>也写得很好，深入浅出，可以好好品读一下。</p>
+<p><code>errgroup.Group.Go()</code>无法接受带有参数的函数参数，可以像给出的参考<sup id="fnref:4" class="footnote-ref"><a href="#fn:4" rel="footnote"><span class="hint--top hint--rounded" aria-label="errgroup_example_md5all_test.go
+">[4]</span></a></sup><sup id="fnref:5" class="footnote-ref"><a href="#fn:5" rel="footnote"><span class="hint--top hint--rounded" aria-label="another errgroup example
+">[5]</span></a></sup><sup id="fnref:6" class="footnote-ref"><a href="#fn:6" rel="footnote"><span class="hint--top hint--rounded" aria-label=" Why you should be using errgroup.WithContext() in your Golang server handlers
+">[6]</span></a></sup>中那样使用<code>channel</code>传递数据，当然也可以使用之前介绍中提到的闭包机制。</p>
+<h2 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h2><p>严格来说这不是一个跟 Goroutine 相关的话题，所以在这里不会做详细地介绍。</p>
+<p>可能注意到在 <a href="#common-pool">common pool</a> 中有这么一个代码片段：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">for</span> _, person := <span class="hljs-keyword">range</span> peple &#123;<br>  <span class="hljs-comment">// is it redundant?</span><br>  localPerson := person <span class="hljs-comment">// important!</span><br>  f := <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;<br>    demoFunc(localPerson)<br>    wg.Done()<br>  &#125;<br>  <br>  wg.Add(<span class="hljs-number">1</span>)<br>  _ = ants.Submit(f)<br>&#125;<br>wg.Wait()<br></code></pre></td></tr></table></figure>
+
+<p><code>localPerson := person</code> 显得很多余，但其实不然，如果有过 Python 程序编写经验的人会很容易明白，<code>person</code>这个变量指向的其实是同一个地址，如果不做 copy，它会被所有的 Goroutine 共享<sup id="fnref:7" class="footnote-ref"><a href="#fn:7" rel="footnote"><span class="hint--top hint--rounded" aria-label="go vet range variable captured by func literal when using go routine inside of for each loop
+">[7]</span></a></sup>。</p>
+<p>可以自己简单验证一下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> res []*<span class="hljs-keyword">int</span><br><span class="hljs-keyword">for</span> i := <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">3</span>; i++ &#123;<br>  res = <span class="hljs-built_in">append</span>(res, &amp;i)<br>&#125;<br><span class="hljs-keyword">for</span> _, p := <span class="hljs-keyword">range</span> res &#123;<br>  fmt.Println(*p)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>结果为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">4<br>4<br>4<br></code></pre></td></tr></table></figure>
+
+<p>修改后：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> res []*<span class="hljs-keyword">int</span><br><span class="hljs-keyword">for</span> i := <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">3</span>; i++ &#123;<br>	local := i<br>	res = <span class="hljs-built_in">append</span>(res, &amp;local)<br>&#125;<br><span class="hljs-keyword">for</span> _, p := <span class="hljs-keyword">range</span> res &#123;<br>	fmt.Println(*p)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>结果为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">1<br>2<br>3<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
 <section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/48659334/does-a-goroutine-pool-make-sense-like-thread-pools-in-other-languages">Does a goroutine pool make sense like thread pools in other languages?</a>
 <a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://github.com/panjf2000/ants/issues/1">测试发现使用池计算时间并没有缩短，只有内存占用变小了。</a>
-<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/18660533/why-does-the-use-of-an-unbuffered-channel-in-the-same-goroutine-result-in-a-dead">Why does the use of an unbuffered channel in the same goroutine result in a deadlock?</a>
+<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:4" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://github.com/golang/sync/blob/master/errgroup/errgroup_example_md5all_test.go">errgroup_example_md5all_test.go</a>
+<a href="#fnref:4" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:5" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://gist.github.com/pteich/c0bb58b0b7c8af7cc6a689dd0d3d26ef">another errgroup example</a>
+<a href="#fnref:5" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:6" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.fullstory.com/blog/why-errgroup-withcontext-in-golang-server-handlers/">Why you should be using errgroup.WithContext() in your Golang server handlers</a>
+<a href="#fnref:6" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:7" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/40326723/go-vet-range-variable-captured-by-func-literal-when-using-go-routine-inside-of-f">go vet range variable captured by func literal when using go routine inside of for each loop</a>
+<a href="#fnref:7" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
             </div>
             <hr>
             <div>
@@ -282,6 +348,8 @@
                     <i class="iconfont icon-tags"></i>
                     
                       <a class="hover-with-bg" href="/tags/golang/">golang</a>
+                    
+                      <a class="hover-with-bg" href="/tags/goroutine/">goroutine</a>
                     
                   </div>
                 
