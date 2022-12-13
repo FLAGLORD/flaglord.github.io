@@ -1,3 +1,4 @@
+http://flaglord.com/2021/05/26/Kubernetes%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0%E6%95%B4%E7%90%86/
 http://flaglord.com/about/index.html
 http://flaglord.com/2022/11/28/Goroutine-%E4%BD%BF%E7%94%A8%E7%9A%84%E4%B8%80%E4%BA%9B%E7%BB%8F%E9%AA%8C%E8%B0%88/
 http://flaglord.com/2021/09/02/How-https-work/
@@ -13,7 +14,6 @@ http://flaglord.com/2021/09/29/Sharedptr-C-implementation/
 http://flaglord.com/2021/10/17/MyDocker-%E5%AE%9E%E7%8E%B0%E8%B8%A9%E5%9D%91%E6%8C%87%E5%8D%97/
 http://flaglord.com/2021/07/04/docker-compose%E6%90%AD%E5%BB%BA%E6%9C%AC%E5%9C%B0%E4%BC%AAzookeeper%E9%9B%86%E7%BE%A4/
 http://flaglord.com/2021/09/30/RWLock-C-implementation/
-http://flaglord.com/2021/05/26/Kubernetes%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0%E6%95%B4%E7%90%86/
 http://flaglord.com/2021/07/08/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/
 http://flaglord.com/2021/09/07/Is-KMP-always-faster/
 http://flaglord.com/2021/06/26/Goland%E8%BF%9E%E6%8E%A5VMWARE/
