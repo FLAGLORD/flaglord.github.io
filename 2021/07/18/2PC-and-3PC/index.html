@@ -317,7 +317,8 @@
 <li><p>如果所有的 participants 都已经收到了 preCommit  messages，那么新的 Coordinator 可以认为事务能够提交</p>
 <div class="note note-info">
             <p>大家收到 preCommit messages 的前提是所有人在 vote 阶段都 agree，所以如果剩余存活的 participants 都收到了 preCommit, 无论失效的 participant 是否收到 preCommit,coordinator 选择提交是没有风险（否则失效节点也不会在 vote 阶段选择 agree）</p>
-          </div></li>
+          </div>
+</li>
 <li><p>如果有任意一个 participant 没有收到 preCommit messages,那么  Coordinator 可以选择 abort transaction 或者重新启动整个事务提交的流程</p>
 <div class="note note-info">
             <p>在这里可以放心大胆地 abort 的原因正是只有所有的 participants 收到 preCommit后才会进入提交阶段，换言之，只要有任意一个未收到，那么不会有任意一个副本已经提交了从而造成与其他 abort 事务的副本不一致的状态</p>
