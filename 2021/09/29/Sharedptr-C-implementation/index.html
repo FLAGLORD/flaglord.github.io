@@ -21,7 +21,7 @@
     <meta name="description" content="前言回望最初版本的shared_ptr，其实存在着很多问题，比如没有考虑 Constructor Failure以及未使用 copy-and-swap idiom来解决 code duplicate 等. 在这里我打算保留最初的版本，并添加说明对此进行更正 Old Version成员变量ptr用于保存共享的指针，而 refCount则是计数器，在这里注意 refCount是指针，这样的话可以做到多">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Sharedptr C++ implementation">
-<meta property="og:url" content="http://flaglord.com/2021/09/29/Sharedptr-C-implementation/index.html">
+<meta property="og:url" content="https://flaglord.com/2021/09/29/Sharedptr-C-implementation/index.html">
 <meta property="og:site_name" content="Flaglord">
 <meta property="og:description" content="前言回望最初版本的shared_ptr，其实存在着很多问题，比如没有考虑 Constructor Failure以及未使用 copy-and-swap idiom来解决 code duplicate 等. 在这里我打算保留最初的版本，并添加说明对此进行更正 Old Version成员变量ptr用于保存共享的指针，而 refCount则是计数器，在这里注意 refCount是指针，这样的话可以做到多">
 <meta property="og:locale" content="zh_CN">
@@ -384,7 +384,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>Sharedptr C++ implementation</div>
-      <div>http://flaglord.com/2021/09/29/Sharedptr-C-implementation/</div>
+      <div>https://flaglord.com/2021/09/29/Sharedptr-C-implementation/</div>
     </div>
     <div class="license-meta">
       
