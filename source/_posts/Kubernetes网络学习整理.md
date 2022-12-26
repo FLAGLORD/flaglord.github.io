@@ -19,6 +19,12 @@ tags: Kubernetes
 
 宿主机会创建名为 docker0 的网桥，容器通过 Veth Pair连接到网桥上。网桥的工作方式与交换机类似，这样宿主机上的容器就可以通过网桥连接在一个二层网络中。
 
+{%note info%}
+
+根据官方的[文档](https://docs.docker.com/desktop/networking/#use-cases-and-workarounds)，mac 用户在宿主机上应该找不到 `docker0`这个网桥
+
+{%endnote%}
+
 Docker 会从 RFC1918 定义的私有 IP 网段中选择一个网段来供 docker0 以及容器使用。Docker 一般会使用 172.17.0.0/16 这个网段，并将 172.16.0.1/16 分配给 docker0 网桥（当然这个网段可以在 Docker Daemon启动时通过`--bip=CDIR`自行配置）。
 
 由于容器 Network Namespace 与宿主机隔离，所以容器是看不到 docker0 这个设备的。为了与同宿主机的其他容器通信，docker 会创建一对 veth pair,它组成一个数据通道，一段放在新创建的容器中，命名为 eth0,另一端在宿主机中，名字的形式一般为 vethxxx,并将该设备加入到 docker0 网桥中，docker 会为 eth0 从前文提到的172.17.0.0/16 选取一个未被占用的 ip 进行设置 ，同时容器的默认网关会设置成 docker0 的 ip 地址（即 172.17.0.1），即访问非本机容器网段会经过 docker0 网关进行转发，而同主机（同网段）之间通过广播通信（route 中可以看到一条 Gateway 0.0.0.0 的记录，表示其不需要路由）。
