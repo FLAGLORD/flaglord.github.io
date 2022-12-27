@@ -229,6 +229,67 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2022/12/26/%E4%BD%BF%E7%94%A8-Golang-%E5%AE%9E%E7%8E%B0-AES-%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95/" target="_self">
+          使用 Golang 实现 AES 加密算法
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2022/12/26/%E4%BD%BF%E7%94%A8-Golang-%E5%AE%9E%E7%8E%B0-AES-%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95/" target="_self">
+        <div>
+          写在之前定位本文无意于介绍对称加密和非对称加密算法的区别，也无意于从底层来讲解 AES 算法的加密原理以及一步步实现，可能会有人注意到 Golang 实际上内置了 cypto/aes 这个包，但它的抽象程度还没有那么高（比如提供像Encrypt(key, plainText) 以及 Decrypt(cipherText)这样的接口），所以到我们真正使用间还隔着一道沟壑，所以本文就是在讲如何去”填埋
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-12-26 17:03" pubdate>
+              2022-12-26
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/golang/" class="category-chain-item">golang</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/golang/">#golang</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2022/11/28/Goroutine-%E4%BD%BF%E7%94%A8%E7%9A%84%E4%B8%80%E4%BA%9B%E7%BB%8F%E9%AA%8C%E8%B0%88/" target="_self">
           Goroutine 使用的一些经验谈
         </a>
@@ -728,54 +789,6 @@
               <a href="/tags/C/">#C++</a>
             
               <a href="/tags/interview/">#interview</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/09/14/%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%BA%94%E8%AF%A5%E5%9C%A8%E6%9E%84%E9%80%A0%E5%92%8C%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0%E4%B8%AD%E8%B0%83%E7%94%A8%E8%99%9A%E5%87%BD%E6%95%B0/" target="_self">
-          为什么不应该在构造和析构函数中调用虚函数
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2021/09/14/%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%BA%94%E8%AF%A5%E5%9C%A8%E6%9E%84%E9%80%A0%E5%92%8C%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0%E4%B8%AD%E8%B0%83%E7%94%A8%E8%99%9A%E5%87%BD%E6%95%B0/" target="_self">
-        <div>
-          其实这来自于 《Effective C++》 Rule 09：              Never call virtual functions during construction or destruction             这一点主要是因为构造函数和析构函数比较特殊 12345678910111213141516171819202122232425262728#include &
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-09-14 19:45" pubdate>
-              2021-09-14
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/C/">#C++</a>
-            
-              <a href="/tags/Effective-C/">#Effective C++</a>
-            
-              <a href="/tags/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/">#构造函数</a>
-            
-              <a href="/tags/%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0/">#析构函数</a>
-            
-              <a href="/tags/%E8%99%9A%E5%87%BD%E6%95%B0/">#虚函数</a>
             
           </div>
         
