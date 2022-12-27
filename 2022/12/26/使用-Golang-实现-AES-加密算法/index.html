@@ -18,15 +18,15 @@
   <meta name="author" content="flaglord">
   <meta name="keywords" content="">
   
-    <meta name="description" content="写在之前定位本文无意于介绍对称加密和非对称加密算法的区别，也无意于从底层来讲解 AES 算法的加密原理以及一步步实现，可能会有人注意到 Golang 实际上内置了 cypto&#x2F;aes 这个包，但它的抽象程度还没有那么高（比如提供像Encrypt(key, plainText) 以及 Decrypt(cipherText)这样的接口），所以到我们真正使用间还隔着一道沟壑，所以本文就是在讲如何去”填埋">
+    <meta name="description" content="写在之前定位本文无意于介绍对称加密和非对称加密算法的区别，也无意于从底层来讲解 AES 算法的加密原理以及一步步实现，可能会有人注意到 Golang 实际上内置了 cypto&#x2F;aes 这个包，但它的抽象程度还没有那么高（比如提供像Encrypt(key, plainText) 以及 Decrypt(key, cipherText)这样的接口），所以到我们真正使用间还隔着一道沟壑，所以本文就是在讲如">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用 Golang 实现 AES 加密算法">
 <meta property="og:url" content="https://flaglord.com/2022/12/26/%E4%BD%BF%E7%94%A8-Golang-%E5%AE%9E%E7%8E%B0-AES-%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95/index.html">
 <meta property="og:site_name" content="Flaglord">
-<meta property="og:description" content="写在之前定位本文无意于介绍对称加密和非对称加密算法的区别，也无意于从底层来讲解 AES 算法的加密原理以及一步步实现，可能会有人注意到 Golang 实际上内置了 cypto&#x2F;aes 这个包，但它的抽象程度还没有那么高（比如提供像Encrypt(key, plainText) 以及 Decrypt(cipherText)这样的接口），所以到我们真正使用间还隔着一道沟壑，所以本文就是在讲如何去”填埋">
+<meta property="og:description" content="写在之前定位本文无意于介绍对称加密和非对称加密算法的区别，也无意于从底层来讲解 AES 算法的加密原理以及一步步实现，可能会有人注意到 Golang 实际上内置了 cypto&#x2F;aes 这个包，但它的抽象程度还没有那么高（比如提供像Encrypt(key, plainText) 以及 Decrypt(key, cipherText)这样的接口），所以到我们真正使用间还隔着一道沟壑，所以本文就是在讲如">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-12-26T09:03:53.000Z">
-<meta property="article:modified_time" content="2022-12-27T06:56:35.438Z">
+<meta property="article:modified_time" content="2022-12-27T07:32:52.784Z">
 <meta property="article:author" content="flaglord">
 <meta property="article:tag" content="golang">
 <meta name="twitter:card" content="summary_large_image">
@@ -238,7 +238,7 @@
         
         
           <!-- compatible with older versions-->
-          49 分钟
+          50 分钟
         
       </span>
     
@@ -290,7 +290,7 @@
             
               <div class="markdown-body">
                 
-                <h2 id="写在之前"><a href="#写在之前" class="headerlink" title="写在之前"></a>写在之前</h2><h3 id="定位"><a href="#定位" class="headerlink" title="定位"></a>定位</h3><p>本文无意于介绍对称加密和非对称加密算法的区别，也无意于从底层来讲解 AES 算法的加密原理以及一步步实现，可能会有人注意到 Golang 实际上内置了 <code>cypto/aes</code> 这个包，但它的抽象程度还没有那么高（比如提供像<code>Encrypt(key, plainText)</code> 以及 <code>Decrypt(cipherText)</code>这样的接口），所以到我们真正使用间还隔着一道沟壑，所以本文就是在讲如何去”填埋”，如何快速地利用官方提供的包去实现自己业务上可用的 AES 算法。</p>
+                <h2 id="写在之前"><a href="#写在之前" class="headerlink" title="写在之前"></a>写在之前</h2><h3 id="定位"><a href="#定位" class="headerlink" title="定位"></a>定位</h3><p>本文无意于介绍对称加密和非对称加密算法的区别，也无意于从底层来讲解 AES 算法的加密原理以及一步步实现，可能会有人注意到 Golang 实际上内置了 <code>cypto/aes</code> 这个包，但它的抽象程度还没有那么高（比如提供像<code>Encrypt(key, plainText)</code> 以及 <code>Decrypt(key, cipherText)</code>这样的接口），所以到我们真正使用间还隔着一道沟壑，所以本文就是在讲如何去”填埋”，如何快速地利用官方提供的包去实现自己业务上可用的 AES 算法。</p>
 <h3 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h3><p>我个人并没有数字安全的从业背景，对密码学了解有但十分有限，无法保证给出的代码在生产上的绝对安全，但会尽我所能，利用可用的参考资料，让我的代码尽可能可信可靠，如果能在什么地方帮到你，这是我的荣幸。如果你有任何的意见，欢迎提出反馈，一起讨论。</p>
 <h3 id="代码仓库参考"><a href="#代码仓库参考" class="headerlink" title="代码仓库参考"></a>代码仓库参考</h3><p>项目仓库地址：<a target="_blank" rel="noopener" href="https://github.com/FLAGLORD/goaes">https://github.com/FLAGLORD/goaes</a></p>
 <h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><h3 id="Padding"><a href="#Padding" class="headerlink" title="Padding"></a>Padding</h3><blockquote>
