@@ -1,0 +1,744 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Rickicon2.ico">
+  <link rel="icon" href="/img/Rickicon2.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="flaglord">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="在一些场景中，我们需要像表格一样整齐地打印一些信息，比如一个人的姓名，家庭地址和联系方式，我希望打印的格式像下面这样： 123Name		:	BobAddress :	New York AvenuePhone		: 12345674567  这个问题听上去非常简单，简单到似乎不该成为一个问题，我们很容易地给出下面这段代码： 12345678information :&#x3D; map[string]str">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何在 golang 中上下对齐打印字符串">
+<meta property="og:url" content="https://flaglord.com/2023/02/02/%E5%A6%82%E4%BD%95%E5%9C%A8-golang-%E4%B8%AD%E4%B8%8A%E4%B8%8B%E5%AF%B9%E9%BD%90%E6%89%93%E5%8D%B0%E5%AD%97%E7%AC%A6%E4%B8%B2/index.html">
+<meta property="og:site_name" content="Flaglord">
+<meta property="og:description" content="在一些场景中，我们需要像表格一样整齐地打印一些信息，比如一个人的姓名，家庭地址和联系方式，我希望打印的格式像下面这样： 123Name		:	BobAddress :	New York AvenuePhone		: 12345674567  这个问题听上去非常简单，简单到似乎不该成为一个问题，我们很容易地给出下面这段代码： 12345678information :&#x3D; map[string]str">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-02-02T07:42:02.000Z">
+<meta property="article:modified_time" content="2023-02-02T08:50:49.969Z">
+<meta property="article:author" content="flaglord">
+<meta property="article:tag" content="golang">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+    <meta name="google-site-verification" content="2LnXQIXdhJV_gy8RXbAXgNcNzhllQC_Me3_qlIIkC3I" /> <meta name="baidu-site-verification" content="code-Y5g1WZqiGT" />
+  
+  <title>如何在 golang 中上下对齐打印字符串 - Flaglord</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"flaglord.com","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":6},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Flaglord&#39;s Space</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/banner.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="如何在 golang 中上下对齐打印字符串"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-02-02 15:42" pubdate>
+          2023年2月2日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          2.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          21 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">如何在 golang 中上下对齐打印字符串</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    <!-- compatible with older versions-->
+                    本文最后更新于：2023年2月2日 下午
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <p>在一些场景中，我们需要像表格一样整齐地打印一些信息，比如一个人的姓名，家庭地址和联系方式，我希望打印的格式像下面这样：</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs ada">Name		:	<span class="hljs-type">Bob</span><br>Address :	<span class="hljs-type">New</span> York Avenue<br>Phone		: 12345674567<br></code></pre></td></tr></table></figure>
+
+<p>这个问题听上去非常简单，简单到似乎不该成为一个问题，我们很容易地给出下面这段代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go">information := <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-type">string</span>&#123;<br>  <span class="hljs-string">&quot;Name&quot;</span>:    <span class="hljs-string">&quot;Bob&quot;</span>,<br>  <span class="hljs-string">&quot;Address&quot;</span>: <span class="hljs-string">&quot;New York Avenue&quot;</span>,<br>  <span class="hljs-string">&quot;Phone&quot;</span>:   <span class="hljs-string">&quot;12345674567&quot;</span>,<br>&#125;<br><span class="hljs-keyword">for</span> k, v := <span class="hljs-keyword">range</span> information &#123;<br>  fmt.Printf(<span class="hljs-string">&quot;%-10s: %s\n&quot;</span>, k, v)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>效果如下：</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs ada">Name      : <span class="hljs-type">Bob</span><br>Address   : <span class="hljs-type">New</span> York Avenue<br>Phone     : 12345674567<br></code></pre></td></tr></table></figure>
+
+<p>好，下面我们希望打印的信息中可能参杂一些中文字符，使用相同的代码去打印：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs golang">Name      : Bob<br>Address   : New York Avenue<br>Phone     : <span class="hljs-number">12345674567</span><br>国籍        : 无国籍<br></code></pre></td></tr></table></figure>
+
+<p>可以看到不这么对齐了，这实在让人有点困惑。</p>
+<p>而在我们继续往下之前，对 golang 比较熟悉的人应该都知道 character 和 byte 的区别，golang 之父 Rob Pike 也在这篇文章<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="[Strings, bytes, runes and characters in Go](https://go.dev/blog/strings)">[1]</span></a></sup>中比较详尽地解释了差别。</p>
+<p>对于一个中文字符，使用<code>len()</code>实际上计算的是其 byte 长度</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">fmt.Printf(<span class="hljs-string">&quot;the length of a is %d\n&quot;</span>, <span class="hljs-built_in">len</span>(<span class="hljs-string">&quot;a&quot;</span>))		<span class="hljs-comment">// the length of a is 1</span><br>fmt.Printf(<span class="hljs-string">&quot;the length of 我 is %d\n&quot;</span>, <span class="hljs-built_in">len</span>(<span class="hljs-string">&quot;我&quot;</span>))	<span class="hljs-comment">// the length of 我 is 3</span><br></code></pre></td></tr></table></figure>
+
+<p> 而如果想要统计字符即 character 的数量，golang 提供了<code>utf8.RuneCountInString</code></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go">text := <span class="hljs-string">&quot;你好，世界&quot;</span><br>fmt.Printf(<span class="hljs-string">&quot;the length of %s is %d\n&quot;</span>, text, utf8.RuneCountInString(text))<br><span class="hljs-comment">// the length of 你好，世界 is 5</span><br></code></pre></td></tr></table></figure>
+
+<p>有没有可能<code>fmt</code>在计算中文这样的字符的长度时有问题呢？我们可以看一下<code>fmt</code>的实现</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// padString appends s to f.buf, padded on left (!f.minus) or right (f.minus).</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(f *fmt)</span></span> padString(s <span class="hljs-type">string</span>) &#123;<br>	<span class="hljs-keyword">if</span> !f.widPresent || f.wid == <span class="hljs-number">0</span> &#123;<br>		f.buf.writeString(s)<br>		<span class="hljs-keyword">return</span><br>	&#125;<br>	width := f.wid - utf8.RuneCountInString(s)<br>	<span class="hljs-keyword">if</span> !f.minus &#123;<br>		<span class="hljs-comment">// left padding</span><br>		f.writePadding(width)<br>		f.buf.writeString(s)<br>	&#125; <span class="hljs-keyword">else</span> &#123;<br>		<span class="hljs-comment">// right padding</span><br>		f.buf.writeString(s)<br>		f.writePadding(width)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>fmt</code>在统计长度时使用的同样是<code>utf8.RuneCountInString</code>，那么问题只可能出现在打印的效果上，在这里就需要区分两个概念，一个是<code>character length</code>，另一个则是<code>displayed width</code>，同样是一个长度的字符，中文的<code>我</code>和<code>i</code>占的宽度并不相同，详细地可以参考一下 UAX 的 report<sup id="fnref:2" class="footnote-ref"><a href="#fn:2" rel="footnote"><span class="hint--top hint--rounded" aria-label="[Get the width of Chinese strings correctly](https://stackoverflow.com/questions/69559133/get-the-width-of-chinese-strings-correctly)">[2]</span></a></sup></p>
+<p>而为了能够整齐地打印就需要有办法统计字符串的宽度，在 <a target="_blank" rel="noopener" href="https://github.com/olekukonko/tablewriter">tablewriter</a> 和 <a target="_blank" rel="noopener" href="https://github.com/jedib0t/go-pretty">go-pretty</a> 这些打印 table 的开源库中在计算 padding 时都用到了 <a target="_blank" rel="noopener" href="https://github.com/mattn/go-runewidth">go-runewidth</a> 这个库，我们试着使用它改写一下我们的代码</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go">information := <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-type">string</span>&#123;<br>  <span class="hljs-string">&quot;Name&quot;</span>:    <span class="hljs-string">&quot;Bob&quot;</span>,<br>  <span class="hljs-string">&quot;Address&quot;</span>: <span class="hljs-string">&quot;New York Avenue&quot;</span>,<br>  <span class="hljs-string">&quot;Phone&quot;</span>:   <span class="hljs-string">&quot;12345674567&quot;</span>,<br>  <span class="hljs-string">&quot;国籍&quot;</span>:      <span class="hljs-string">&quot;无国籍&quot;</span>,<br>&#125;<br><span class="hljs-keyword">for</span> k, v := <span class="hljs-keyword">range</span> information &#123;<br>  kWid := runewidth.StringWidth(k)<br>  <span class="hljs-keyword">if</span> kWid &lt;= <span class="hljs-number">10</span> &#123;<br>    k += strings.Repeat(<span class="hljs-string">&quot; &quot;</span>, <span class="hljs-number">10</span>-kWid)<br>  &#125;<br>  fmt.Printf(<span class="hljs-string">&quot;%s: %s\n&quot;</span>, k, v)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>It works like a charm!</p>
+<p>当然，也正如 stackoverflow 一篇回答[^3]评论中提到的那样</p>
+<blockquote>
+<p>runes do not have a “pixel width”, the font does. Therefore the answer will depend on the tool&#x2F;package you’re using to render the font. </p>
+</blockquote>
+<p>有的时候显示长度会取决于字体的设计，不过 <a target="_blank" rel="noopener" href="https://github.com/mattn/go-runewidth">go-runewidth</a> 在大部分情况都可以工作得很好。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://go.dev/blog/strings">Strings, bytes, runes and characters in Go</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.unicode.org/reports/tr11/tr11-40.html">Unicode® Standard Annex #11EAST ASIAN WIDTH</a>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/69559133/get-the-width-of-chinese-strings-correctly">Get the width of Chinese strings correctly</a>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/golang/" class="category-chain-item">golang</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/golang/">#golang</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>如何在 golang 中上下对齐打印字符串</div>
+      <div>https://flaglord.com/2023/02/02/如何在-golang-中上下对齐打印字符串/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>flaglord</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年2月2日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/12/26/%E4%BD%BF%E7%94%A8-Golang-%E5%AE%9E%E7%8E%B0-AES-%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95/" title="使用 Golang 实现 AES 加密算法">
+                        <span class="hidden-mobile">使用 Golang 实现 AES 加密算法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://cdn.jsdelivr.net/npm/@waline/client@0.14.8/dist/waline.min.css')
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/@waline/client@0.14.8/dist/waline.min.js', function() {
+        var options = Object.assign(
+          {"serverURL":"https://imnerd-api-steel.vercel.app/","path":"window.location.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10,"placeholder":"说点什么","avatar":"retro","highlight":true,"avatarCDN":null,"avatarForce":false,"requiredFields":[],"emojiCDN":"","emojiMaps":{},"anonymous":null},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
