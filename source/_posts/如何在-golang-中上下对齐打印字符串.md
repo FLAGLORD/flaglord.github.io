@@ -9,9 +9,9 @@ category:
 在一些场景中，我们需要像表格一样整齐地打印一些信息，比如一个人的姓名，家庭地址和联系方式，我希望打印的格式像下面这样：
 
 ```
-Name		:	Bob
-Address :	New York Avenue
-Phone		: 12345674567
+Name    : Bob
+Address : New York Avenue
+Phone   : 12345674567
 ```
 
 这个问题听上去非常简单，简单到似乎不该成为一个问题，我们很容易地给出下面这段代码：
@@ -117,4 +117,4 @@ It works like a charm!
 
 [^1]:[Strings, bytes, runes and characters in Go](https://go.dev/blog/strings)
 [^2]:[Unicode® Standard Annex #11EAST ASIAN WIDTH](https://www.unicode.org/reports/tr11/tr11-40.html)
-[^2]:[Get the width of Chinese strings correctly](https://stackoverflow.com/questions/69559133/get-the-width-of-chinese-strings-correctly)
+[^3]:[Get the width of Chinese strings correctly](https://stackoverflow.com/questions/69559133/get-the-width-of-chinese-strings-correctly)
