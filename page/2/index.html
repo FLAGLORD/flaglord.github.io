@@ -17,7 +17,7 @@
   
   <meta name="theme-color" content="#2f4154">
   <meta name="description" content="">
-  <meta name="author" content="John Doe">
+  <meta name="author" content="flaglord">
   <meta name="keywords" content="">
   
     <meta name="google-site-verification" content="2LnXQIXdhJV_gy8RXbAXgNcNzhllQC_Me3_qlIIkC3I" /> <meta name="baidu-site-verification" content="code-Y5g1WZqiGT" />
@@ -48,7 +48,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 5.4.2"></head>
 
 
 <body>
@@ -179,6 +179,216 @@
               <div class="col-12 col-md-10 m-auto">
                 
 
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/10/02/UniquePtr-C-implementation/">UniquePtr C++ implementation</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/10/02/UniquePtr-C-implementation/">
+          
+          
+            
+          
+          在之前的文章中我实现了 SharedPtr，而为了实现 UniquePtr 我阅读了一些文章[1]，意识到我之前的实现存在了大量的问题。正如文章作者所言，智能指针的实现并不适合作为学习材料，它看上去很简单，却存在着大量的陷阱。而 Boost 库的实现直到其成为 C++ 11 的标准，大概有九年的时间。
+不过既然开了坑，姑且硬着头皮写下去吧，毕竟也算作学习的一个过程。
+先给出代码：
+12345678
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-10-02 11:38" pubdate>
+              2021-10-02
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/C/">C++</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/C/">C++</a>
+            
+              <a href="/tags/interview/">interview</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/09/30/RWLock-C-implementation/">RWLock C++ implementation</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/09/30/RWLock-C-implementation/">
+          
+          
+            
+          
+          其实 boost 库已经有相关的实现，在实际工程中使用 boost 库的实现可能会使得我们程序更加健壮。
+这边展示的是一个比较 naive 的实现，逻辑上也并不复杂。
+成员变量readerCount记录正在临界区的读者数量，mutexReader以及mutexWriter实现相应的控制逻辑
+WLock和WUnlock比较简单，就是直接对mutexWriter进行加锁和放锁
+而在RLock中，首先会
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-09-30 00:32" pubdate>
+              2021-09-30
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/C/">C++</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/C/">C++</a>
+            
+              <a href="/tags/interview/">interview</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/09/29/Vector-C-implementation/">Vector C++ implementation</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/09/29/Vector-C-implementation/">
+          
+          
+            
+          
+          成员变量cap_记录了容量大小，而size_则记录了实际存储的元素的数量，iniVal作为const值表示MyVector对象创建时为其预分配的容量大小，vector则是指针，其指向的应该是对象数组的起始地址
+12345private:    T *vector = nullptr;    size_t cap_;    size_t size_;    const int iniVal = 20
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-09-29 21:50" pubdate>
+              2021-09-29
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/C/">C++</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/C/">C++</a>
+            
+              <a href="/tags/interview/">interview</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/09/29/Sharedptr-C-implementation/">Sharedptr C++ implementation</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/09/29/Sharedptr-C-implementation/">
+          
+          
+            
+          
+          前言回望最初版本的shared_ptr，其实存在着很多问题，比如没有考虑 Constructor Failure以及未使用 copy-and-swap idiom来解决 code duplicate 等.
+在这里我打算保留最初的版本，并添加说明对此进行更正
+Old Version成员变量ptr用于保存共享的指针，而 refCount则是计数器，在这里注意 refCount是指针，这样的话可以做到多
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-09-29 21:50" pubdate>
+              2021-09-29
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/C/">C++</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/C/">C++</a>
+            
+              <a href="/tags/interview/">interview</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
 
   <div class="row mx-auto index-card">
     
@@ -460,178 +670,6 @@ Atomicity: All-Or-Nothing. Transaction 涉及到的多个操作要么一同完�
               <a href="/tags/Distributed-System/">Distributed System</a>
             
               <a href="/tags/transaction/">transaction</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/07/18/2PC-and-3PC/">2PC and 3PC</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/07/18/2PC-and-3PC/">
-          
-          
-            
-          
-          本文主要记述在学习 2PC 和 3PC 时的一些思考
-2PC关于 2PC 网上有许多文章介绍，在这里不做赘述。下面提几个关键点以及其和 3PC 的联系
-对于分布式事务而言，其也要保证 Atomicity,即 All-Or-Nothing,其要存在一个 Commit Point。在这之前事务视作失败（Nothing），在这之后事务视作成功（All）。2PC 中，Coordinator 在 Vote 
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-07-18 20:40" pubdate>
-              2021-07-18
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Distributed-System/">Distributed System</a>
-            
-              <a href="/tags/2PC/">2PC</a>
-            
-              <a href="/tags/3PC/">3PC</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/07/09/%E5%85%B3%E4%BA%8Egit-rebase/">关于git rebase</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/07/09/%E5%85%B3%E4%BA%8Egit-rebase/">
-          
-          
-            
-          
-          昨天师兄让我基于他的例子用技术栈重写监控脚本时，需要从 master 获取最新的提交。之前在学校也有过一些使用 git 进行团队协作的经历，所以出于习惯使用了(MyBranch)$ git merge master 。使用 git log 检查提交记录时发现 log 非常混乱，师兄提醒我说从 master 获取时最好使用git rebase,因为这个大库有很多人在开发，master 分支异常活跃，
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-07-09 15:17" pubdate>
-              2021-07-09
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/git/">git</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/07/08/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">LVS负载均衡</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/07/08/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">
-          
-          
-            
-          
-          负载均衡方案服务器集群对外提供服务时，我们希望请求尽可能平均地分散到各台机器上，有一些负载均衡的解决方案
-DNS基于 DNS 的负载均衡实现比较简单，成本低：当 DNS 请求到达 DNS Server 解析域名时，Server 可以根据一些调度策略（按地域、按运营商等等）回复 Client 集群中任意一台服务器的 IP 地址，客户端接下来的请求在 TTL 所指定的时间内将一直发送到此服务器进行处理
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-07-08 00:31" pubdate>
-              2021-07-08
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">负载均衡</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/07/04/docker-compose%E6%90%AD%E5%BB%BA%E6%9C%AC%E5%9C%B0%E4%BC%AAzookeeper%E9%9B%86%E7%BE%A4/">Windows上使用docker-compose搭建本地伪zookeeper集群</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/07/04/docker-compose%E6%90%AD%E5%BB%BA%E6%9C%AC%E5%9C%B0%E4%BC%AAzookeeper%E9%9B%86%E7%BE%A4/">
-          
-          
-            
-          
-          系统环境为 Windows
-Prerequisites开启 Hyper-V确保你开启了 Hyper-V,可以使用管理员身份运行 PowerShell 或者 Terminal，输入命令 bcdedit /set hypervisorlaunchtype auto并进行重启，注意虚拟机软件 VMWARE 以及 VirtualBox 一些版本与 Hyper-v 存在冲突，如果想要使用它们，需要关闭 Hy
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-07-04 12:01" pubdate>
-              2021-07-04
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/zookeeper/">zookeeper</a>
             
           </div>
         

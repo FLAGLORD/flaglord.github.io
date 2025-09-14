@@ -17,7 +17,7 @@
   
   <meta name="theme-color" content="#2f4154">
   <meta name="description" content="">
-  <meta name="author" content="John Doe">
+  <meta name="author" content="flaglord">
   <meta name="keywords" content="">
   
     <meta name="google-site-verification" content="2LnXQIXdhJV_gy8RXbAXgNcNzhllQC_Me3_qlIIkC3I" /> <meta name="baidu-site-verification" content="code-Y5g1WZqiGT" />
@@ -64,7 +64,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 5.4.2"></head>
 
 
 <body>
@@ -233,7 +233,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2022年3月26日 下午
+                  本文最后更新于：2025年9月14日 晚上
                 
               </p>
             
@@ -247,6 +247,10 @@
 </ul>
 <h2 id="bridge-详解"><a href="#bridge-详解" class="headerlink" title="bridge 详解"></a><span id="jump">bridge 详解</span></h2><p>核心词：<strong>Veth Pair</strong>,<strong>bridge</strong>,<strong>172.xx.xx.xx</strong></p>
 <p>宿主机会创建名为 docker0 的网桥，容器通过 Veth Pair连接到网桥上。网桥的工作方式与交换机类似，这样宿主机上的容器就可以通过网桥连接在一个二层网络中。</p>
+<div class="note note-info">
+            <p>根据官方的<a target="_blank" rel="noopener" href="https://docs.docker.com/desktop/networking/#use-cases-and-workarounds">文档</a>，mac 用户在宿主机上应该找不到 <code>docker0</code>这个网桥</p>
+          </div>
+
 <p>Docker 会从 RFC1918 定义的私有 IP 网段中选择一个网段来供 docker0 以及容器使用。Docker 一般会使用 172.17.0.0/16 这个网段，并将 172.16.0.1/16 分配给 docker0 网桥（当然这个网段可以在 Docker Daemon启动时通过<code>--bip=CDIR</code>自行配置）。</p>
 <p>由于容器 Network Namespace 与宿主机隔离，所以容器是看不到 docker0 这个设备的。为了与同宿主机的其他容器通信，docker 会创建一对 veth pair,它组成一个数据通道，一段放在新创建的容器中，命名为 eth0,另一端在宿主机中，名字的形式一般为 vethxxx,并将该设备加入到 docker0 网桥中，docker 会为 eth0 从前文提到的172.17.0.0/16 选取一个未被占用的 ip 进行设置 ，同时容器的默认网关会设置成 docker0 的 ip 地址（即 172.17.0.1），即访问非本机容器网段会经过 docker0 网关进行转发，而同主机（同网段）之间通过广播通信（route 中可以看到一条 Gateway 0.0.0.0 的记录，表示其不需要路由）。</p>
 <p>因为 docker0 以及容器的 IP是私网 IP，在外部网络上不能使用，所以想要和外部世界通信需要用到<strong>NAT</strong>(Network Address Translation).容器想要访问外部世界，需要采用 SNAT 来借用宿主机的 IP 去访问，而容器如果对外界提供服务，则采用 DNAT ，使用宿主机的端口通过 iptable 或者别的某些机制，将流导入到容器上。在这里，可以认为 linux 主机发挥了交换机的功能。</p>

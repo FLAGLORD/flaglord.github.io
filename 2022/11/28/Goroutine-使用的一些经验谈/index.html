@@ -1,0 +1,611 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Rickicon2.ico">
+  <link rel="icon" href="/img/Rickicon2.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="flaglord">
+  <meta name="keywords" content="">
+  
+    <meta name="google-site-verification" content="2LnXQIXdhJV_gy8RXbAXgNcNzhllQC_Me3_qlIIkC3I" /> <meta name="baidu-site-verification" content="code-Y5g1WZqiGT" />
+  
+  <title>Goroutine 使用的一些经验谈 - Flaglord</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"flaglord.com","root":"/","version":"1.8.9a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":6},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Flaglord's Space</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/banner.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Goroutine 使用的一些经验谈">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-11-28 19:27" pubdate>
+        2022年11月28日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.4k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      31
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Goroutine 使用的一些经验谈</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2025年9月14日 晚上
+                
+              </p>
+            
+            <div class="markdown-body">
+              <p>在工作中 Goroutine 使用得相当多，积累了不少经验，也逐渐学习了一些小 tricks，在此进行一些总结 。</p>
+<h2 id="如何控制-Goroutine-的数量"><a href="#如何控制-Goroutine-的数量" class="headerlink" title="如何控制 Goroutine 的数量"></a>如何控制 Goroutine 的数量</h2><p>关于 Goroutine 的语法不做赘述。</p>
+<p>首先，使用协程池还是直接创建新的 Goroutine 并限制数量（协程池会尽可能复用而不是创建）仁者见仁，智者见智，由于 Goroutine 比较轻量级，即便创建新的 Routine 资源消耗也不会很大，在并发数不高的情况下，可以不用过多在意，详情可以参考下这篇回答<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="Does a goroutine pool make sense like thread pools in other languages?
+">[1]</span></a></sup></p>
+<p>下面会介绍提到的两种限制数量的方法。</p>
+<h3 id="开源协程池"><a href="#开源协程池" class="headerlink" title="开源协程池"></a>开源协程池</h3><p>主流的为以下两个：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/Jeffail/tunny">tunny</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/panjf2000/ants">ants</a></li>
+</ul>
+<p>以 ants 为例，ants 在 <a target="_blank" rel="noopener" href="https://github.com/panjf2000/ants#-how-to-use">README</a> 中其实有比较详细的介绍:</p>
+<h4 id="common-pool"><a href="#common-pool" class="headerlink" title="common pool"></a>common pool</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">demoFunc</span><span class="hljs-params">()</span></span> &#123;<br>	time.Sleep(<span class="hljs-number">10</span> * time.Millisecond)<br>	fmt.Println(<span class="hljs-string">&quot;Hello World!&quot;</span>)<br>&#125;<br><br><span class="hljs-keyword">defer</span> ants.Release()<br><br>runTimes := <span class="hljs-number">1000</span><br><br><span class="hljs-comment">// Use the common pool.</span><br><span class="hljs-keyword">var</span> wg sync.WaitGroup<br>syncCalculateSum := <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>  demoFunc()<br>  wg.Done() <span class="hljs-comment">// 进行并发控制</span><br>&#125;<br><span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; runTimes; i++ &#123;<br>  wg.Add(<span class="hljs-number">1</span>)<br>  _ = ants.Submit(syncCalculateSum)<br>&#125;<br>wg.Wait() <span class="hljs-comment">// 等待任务完成</span><br>fmt.Printf(<span class="hljs-string">&quot;running goroutines: %d\n&quot;</span>, ants.Running())<br>fmt.Printf(<span class="hljs-string">&quot;finish all tasks.\n&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>正如其名，其很通用，因为 <code>Sumbit()</code>完全可以传递完全不同的函数作为参数。</p>
+<p>有一些注意点：</p>
+<ol>
+<li><p>不能直接去 <code>Submit</code> 我们的 workerFunction （即 <code>demoFunc()</code>），正如使用 Goroutine 的一般经验，需要使用去<code>WaitGroup</code>去进行控制，示例使用了<code>syncCalculateSum</code>进行了一层包络，同时在调用前要<code>wg.Add(1)</code></p>
+</li>
+<li><p>尽管示例中的 <code>demoFunc()</code>没有参数，而且<code>Submit()</code>的<a target="_blank" rel="noopener" href="https://github.com/panjf2000/ants/blob/master/pool.go#L164">函数签名</a>中可以看到其能接受的函数参数也没有任何参数值，但是我们可以使用 <code>closure</code>闭包机制去传递参数。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">demoFunc</span><span class="hljs-params">(person <span class="hljs-keyword">string</span>)</span></span> &#123;<br>	fmt.Println(<span class="hljs-string">&quot;Hello &quot;</span> + person)<br>&#125;<br><br><span class="hljs-keyword">defer</span> ants.Release()<br><br><span class="hljs-keyword">var</span> people = []<span class="hljs-keyword">string</span>&#123;<br>  <span class="hljs-string">&quot;Alice&quot;</span>,<br>  <span class="hljs-string">&quot;Bob&quot;</span>,<br>&#125;<br><br><span class="hljs-comment">// Use the common pool.</span><br><span class="hljs-keyword">var</span> wg sync.WaitGroup<br><br><span class="hljs-keyword">for</span> _, person := <span class="hljs-keyword">range</span> peple &#123;<br>  localPerson := person <span class="hljs-comment">// important!</span><br>  f := <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;<br>    demoFunc(localPerson)<br>    wg.Done()<br>  &#125;<br>  <br>  wg.Add(<span class="hljs-number">1</span>)<br>  _ = ants.Submit(f)<br>&#125;<br>wg.Wait()<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="Pool-with-a-func"><a href="#Pool-with-a-func" class="headerlink" title="Pool with a func"></a>Pool with a func</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> sum <span class="hljs-keyword">int32</span><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">myFunc</span><span class="hljs-params">(i <span class="hljs-keyword">interface</span>&#123;&#125;)</span></span> &#123;<br>	n := i.(<span class="hljs-keyword">int32</span>)<br>	atomic.AddInt32(&amp;sum, n)<br>	fmt.Printf(<span class="hljs-string">&quot;run with %d\n&quot;</span>, n)<br>&#125;<br><br><span class="hljs-keyword">defer</span> ants.Release()<br><br>runTimes := <span class="hljs-number">1000</span><br><br><span class="hljs-comment">// Use the pool with a function,</span><br><span class="hljs-comment">// set 10 to the capacity of goroutine pool and 1 second for expired duration.</span><br>p, _ := ants.NewPoolWithFunc(<span class="hljs-number">10</span>, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(i <span class="hljs-keyword">interface</span>&#123;&#125;)</span></span> &#123;<br>  myFunc(i)<br>  wg.Done()<br>&#125;)<br><span class="hljs-keyword">defer</span> p.Release()<br><span class="hljs-comment">// Submit tasks one by one.</span><br><span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; runTimes; i++ &#123;<br>  wg.Add(<span class="hljs-number">1</span>)<br>  _ = p.Invoke(<span class="hljs-keyword">int32</span>(i))<br>&#125;<br>wg.Wait()<br>fmt.Printf(<span class="hljs-string">&quot;running goroutines: %d\n&quot;</span>, p.Running())<br>fmt.Printf(<span class="hljs-string">&quot;finish all tasks, result is %d\n&quot;</span>, sum)<br></code></pre></td></tr></table></figure>
+
+<p>与 Common Pool 相比，其只执行特定的函数，但在使用思路上大体一致，同样需要使用<code>WaitGroup</code>进行控制。</p>
+<p>示例中只传递了一个参数，同时<code>NewPoolWithFunc()</code>的<a target="_blank" rel="noopener" href="https://github.com/panjf2000/ants/blob/master/pool_func.go#L127">函数签名</a>中也可以看到其接受的函数参数的参数值只有一个<code>interface&#123;&#125;</code>，也缺少一个类似于 <code>func NewPoolWithFunc(size int, pf func(...interface&#123;&#125;), options ...Option)</code> 的接口，为了能够传递多个参数可能就需要一些 trick.</p>
+<p>一种方法就是将 workFunc 需要的所有参数包装成一个结构体，再拆解传递：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">workerFunc</span><span class="hljs-params">(paramA TypeA, paramB TypeB)</span></span>&#123;<br>  <span class="hljs-comment">// ...</span><br>&#125;<br><br><span class="hljs-keyword">type</span> Params <span class="hljs-keyword">struct</span>&#123;<br>  A TypeA<br>  B TypeB<br>&#125;<br><br>p, _ := ants.NewPoolWithFunc(<span class="hljs-number">10</span>, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(i <span class="hljs-keyword">interface</span>&#123;&#125;)</span></span>&#123;<br>  p, _ := i.(Params) <span class="hljs-comment">// 断言</span><br>  workerFunc(p.A, p.B)<br>  wg.Done()<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>另一种方法则是上面提到的闭包机制。</p>
+<h4 id="关于性能"><a href="#关于性能" class="headerlink" title="关于性能"></a>关于性能</h4><p>还是需要强调，在 worker 数量并不大的情况下，协程池能带来的性能提升是极其有限的，尽管可能会有比较明显的内存使用优势（因为复用机制）<sup id="fnref:2" class="footnote-ref"><a href="#fn:2" rel="footnote"><span class="hint--top hint--rounded" aria-label="测试发现使用池计算时间并没有缩短，只有内存占用变小了。
+">[2]</span></a></sup>，但协程池的使用毕竟增加了复杂度，这点需要进行权衡。</p>
+<h3 id="直接创建新的-Routine"><a href="#直接创建新的-Routine" class="headerlink" title="直接创建新的 Routine"></a>直接创建新的 Routine</h3><p>除了使用协程池去对 Goroutine 进行复用，还可以直接创建新的 Goroutine ，需要的则是添加一些对数量进行限制的逻辑：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> wg sync.WaitGroup<br><br>workerLimiter := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">struct</span>&#123;&#125;, workerNum)<br><span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; runTimes; i++ &#123;<br>    wg.Add(<span class="hljs-number">1</span>)<br>    workLimiter &lt;- <span class="hljs-keyword">struct</span>&#123;&#125;&#123;&#125;<br>    <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(data ParamStruct)</span></span>&#123;<br>	      workerFunc(data)<br>      <br>        wg.Done()<br>      	&lt;-workerLimiter<br>    &#125;(yourData)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>核心思想就是使用空结构体的带有缓冲的<code>channel</code>，利用缓冲区满时 Block 的性质可以很容易地控制并发的数量。</p>
+<div class="note note-warning">
+            <p>这里很推荐将任务逻辑包装成一个<code>workerFunc</code>；尽管不那么做也可以，比如像下面这样：</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(data ParamStruct)</span></span>&#123;<br>      <span class="hljs-comment">// your task logic </span><br>  			...<br>  <br>       wg.Done()<br>     	&lt;-workerLimiter<br>   &#125;(yourData)<br></code></pre></td></tr></table></figure><p>但是这里会有一些潜藏的风险，如果你的逻辑中有多个 return，最容易出现的错误就是<strong>只在末尾添加<code>&lt;-workerLimiter</code>和<code>wg.Done()</code>，</strong>一旦执行不到末尾而提前 return，就有可能会造成程序的阻塞：</p><ul><li>如果 worker 数量大于等于 task 数量，会在<code>wg.Wait()</code>时阻塞</li><li>如果 worker 数量小于 task 数量，则会在<code>workLimiter &lt;- struct{}{}</code>处阻塞</li></ul><p>为了避免遗忘添加，最好的方法就是使用<code>defer</code>，不过由于<code>defer</code>只能和函数连用，所以将相关资源释放的逻辑整合到同一个函数中：</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;<br>  wg.Done()<br>  &lt;-workerLimiter<br>&#125;<br></code></pre></td></tr></table></figure>
+          </div>
+
+<h2 id="收集数据"><a href="#收集数据" class="headerlink" title="收集数据"></a>收集数据</h2><p>使用 Goroutine 往往是为了将比较多的数据进行分批处理从而加快执行速度，所以一般最后需要对 worker 处理得到的结果进行汇集。</p>
+<p>如果结果可以存储在 map 确定的 key 对应的位置或者数组中某个确定的 index 对应的位置中，那么无需担心并发访问的问题。但如果只是将结果添加到数组末尾，且添加位置取决于完成的先后顺序，那么需要考虑 thread-safe 的问题。</p>
+<h3 id="使用-sync-Mutex-来保护"><a href="#使用-sync-Mutex-来保护" class="headerlink" title="使用 sync.Mutex 来保护"></a>使用 sync.Mutex 来保护</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span>&#123;<br>    finalRes	[]ResStruct&#123;&#125;<br>    wg 			sync.WaitGroup<br>    mu			sync.Mutex<br>&#125;<br><span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; runTimes; i++ &#123;<br>    wg.Add(<span class="hljs-number">1</span>)<br>    <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(data YourStruct)</span></span>&#123;<br>        <span class="hljs-keyword">defer</span> wg.Done()<br>      <br>        <span class="hljs-keyword">var</span> res ResStruct&#123;&#125;<br>        <span class="hljs-comment">// your task logic</span><br>      	...<br>        <br>      	mu.Lock()<br>        fianlRes = <span class="hljs-built_in">append</span>(finalRes, res)<br>    		mu.Unlock()<br>    &#125;(yourData)<br>&#125;<br>wg.Wait()<br></code></pre></td></tr></table></figure>
+
+<p>最直接的方法就是使用<code>sync.Mutex</code>来做同步。</p>
+<h3 id="使用-channel-来收集数据"><a href="#使用-channel-来收集数据" class="headerlink" title="使用 channel 来收集数据"></a>使用 channel 来收集数据</h3><p><code>channel</code>本身是 thread-safe 的，使用<code>channel</code>去做同步也是官方推荐的一种方法：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span>&#123;<br>    finalRes	[]ResStruct&#123;&#125;<br>    wg 			sync.WaitGroup<br>&#125;<br>resChan := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> ResStruct&#123;&#125;)<br><span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; runTimes; i++ &#123;<br>    wg.Add(<span class="hljs-number">1</span>)<br>    <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(data YourStruct)</span></span>&#123;<br>        <span class="hljs-keyword">defer</span> wg.Done()<br>      <br>      	<span class="hljs-keyword">var</span> res ResStruct&#123;&#125;<br>        <span class="hljs-comment">// your task logic</span><br>      <br>        resChan &lt;- res<br>    &#125;(yourData)<br>&#125;<br><br><span class="hljs-comment">// important</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;<br>    wg.Wait()<br>    <span class="hljs-built_in">close</span>(resChan)<br>&#125;()<br><br><span class="hljs-comment">// Position 1</span><br><span class="hljs-keyword">for</span> res := <span class="hljs-keyword">range</span> resChan&#123;<br>    finalRes = <span class="hljs-built_in">append</span>(finalRes, res)    <br>&#125;<br><span class="hljs-comment">// Position 2</span><br></code></pre></td></tr></table></figure>
+
+<p>在代码中，worker routine 中将任务结果发送到<code>channel</code> 中，在主 routine 中（区分于<code>go</code>关键词创建的 routine）使用<code>for</code>从<code>channel</code>中不断地收集数据；</p>
+<div class="note note-info">
+            <p>为了能够让主 routine 及时退出循环，这里需要<em><strong>使用另一个单独的 routine</strong></em> 来负责在所有任务完成后关闭<code>channel</code>，这段逻辑如果写在主 routine 的任何地方都会导致阻塞<sup id="fnref:3" class="footnote-ref"><a href="#fn:3" rel="footnote"><span class="hint--top hint--rounded" aria-label="Why does the use of an unbuffered channel in the same goroutine result in a deadlock?">[3]</span></a></sup>：</p><ul><li>如果在 Position 1 处，由于 unbuffered channel 可以看作 always-full，在没有人从<code>resChan</code>处接收数据时，worker routine 作为 sender 会阻塞，这意味着<code>wg.Done()</code>永远无法被执行，则<code>wg.Wait()</code>永远无法退出，从而造成主 routine 的阻塞</li><li>如果在 Position 2 处，由于没有人去 close channel，主 routine 永远无法退出<code>for</code> 循环</li></ul>
+          </div>
+
+<p>由于这些要注意的点，这么写确实显得很麻烦，远不如前一种那么简单直观，在多数情况下我也推荐第一种，但是有一些很特别的情况，比如你既不想使用<code>goto</code>同时你又不希望执行到底部，想要提前退出并发送 res，在这种情况下，前一种方法需要写</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go">mu.Lock()<br>fianlRes = <span class="hljs-built_in">append</span>(finalRes, res)<br>mu.Unlock()<br><span class="hljs-keyword">return</span><br></code></pre></td></tr></table></figure>
+
+<p>后一种方法则只需要写</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">resChan &lt;- res<br><span class="hljs-keyword">return</span><br></code></pre></td></tr></table></figure>
+
+<p>尤其在这样的代码段可能会在你的 task 逻辑中大量反复出现时，后一种方法形势上要更整洁统一。</p>
+<h2 id="如何在-Goroutine-中处理错误"><a href="#如何在-Goroutine-中处理错误" class="headerlink" title="如何在 Goroutine 中处理错误"></a>如何在 Goroutine 中处理错误</h2><p>在使用 Goroutine 的一些场景中，worker 可能会在执行过程中产生一些<code>error</code>，关于如何处理，<a target="_blank" rel="noopener" href="https://github.com/golang/sync">Go Sync</a>提供了一个强大的“武器”——<a target="_blank" rel="noopener" href="https://github.com/golang/sync/blob/master/errgroup/errgroup.go"><code>errgroup.Group</code></a></p>
+<p>后续有空的话会进一步拓展这个话题，有一些代码片段可供参考<sup id="fnref:4" class="footnote-ref"><a href="#fn:4" rel="footnote"><span class="hint--top hint--rounded" aria-label="errgroup_example_md5all_test.go
+">[4]</span></a></sup><sup id="fnref:5" class="footnote-ref"><a href="#fn:5" rel="footnote"><span class="hint--top hint--rounded" aria-label="another errgroup example
+">[5]</span></a></sup>，这篇博文<sup id="fnref:6" class="footnote-ref"><a href="#fn:6" rel="footnote"><span class="hint--top hint--rounded" aria-label=" Why you should be using errgroup.WithContext() in your Golang server handlers
+">[6]</span></a></sup>也写得很好，深入浅出，可以好好品读一下。</p>
+<p><code>errgroup.Group.Go()</code>无法接受带有参数的函数参数，可以像给出的参考<sup id="fnref:4" class="footnote-ref"><a href="#fn:4" rel="footnote"><span class="hint--top hint--rounded" aria-label="errgroup_example_md5all_test.go
+">[4]</span></a></sup><sup id="fnref:5" class="footnote-ref"><a href="#fn:5" rel="footnote"><span class="hint--top hint--rounded" aria-label="another errgroup example
+">[5]</span></a></sup><sup id="fnref:6" class="footnote-ref"><a href="#fn:6" rel="footnote"><span class="hint--top hint--rounded" aria-label=" Why you should be using errgroup.WithContext() in your Golang server handlers
+">[6]</span></a></sup>中那样使用<code>channel</code>传递数据，当然也可以使用之前介绍中提到的闭包机制。</p>
+<h2 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h2><p>严格来说这不是一个跟 Goroutine 相关的话题，所以在这里不会做详细地介绍。</p>
+<p>可能注意到在 <a href="#common-pool">common pool</a> 中有这么一个代码片段：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">for</span> _, person := <span class="hljs-keyword">range</span> peple &#123;<br>  <span class="hljs-comment">// is it redundant?</span><br>  localPerson := person <span class="hljs-comment">// important!</span><br>  f := <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;<br>    demoFunc(localPerson)<br>    wg.Done()<br>  &#125;<br>  <br>  wg.Add(<span class="hljs-number">1</span>)<br>  _ = ants.Submit(f)<br>&#125;<br>wg.Wait()<br></code></pre></td></tr></table></figure>
+
+<p><code>localPerson := person</code> 显得很多余，但其实不然，如果有过 Python 程序编写经验的人会很容易明白，<code>person</code>这个变量指向的其实是同一个地址，如果不做 copy，它会被所有的 Goroutine 共享<sup id="fnref:7" class="footnote-ref"><a href="#fn:7" rel="footnote"><span class="hint--top hint--rounded" aria-label="go vet range variable captured by func literal when using go routine inside of for each loop
+">[7]</span></a></sup>。</p>
+<p>可以自己简单验证一下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> res []*<span class="hljs-keyword">int</span><br><span class="hljs-keyword">for</span> i := <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">3</span>; i++ &#123;<br>  res = <span class="hljs-built_in">append</span>(res, &amp;i)<br>&#125;<br><span class="hljs-keyword">for</span> _, p := <span class="hljs-keyword">range</span> res &#123;<br>  fmt.Println(*p)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>结果为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">4<br>4<br>4<br></code></pre></td></tr></table></figure>
+
+<p>修改后：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> res []*<span class="hljs-keyword">int</span><br><span class="hljs-keyword">for</span> i := <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">3</span>; i++ &#123;<br>	local := i<br>	res = <span class="hljs-built_in">append</span>(res, &amp;local)<br>&#125;<br><span class="hljs-keyword">for</span> _, p := <span class="hljs-keyword">range</span> res &#123;<br>	fmt.Println(*p)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>结果为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">1<br>2<br>3<br></code></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/48659334/does-a-goroutine-pool-make-sense-like-thread-pools-in-other-languages">Does a goroutine pool make sense like thread pools in other languages?</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://github.com/panjf2000/ants/issues/1">测试发现使用池计算时间并没有缩短，只有内存占用变小了。</a>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/18660533/why-does-the-use-of-an-unbuffered-channel-in-the-same-goroutine-result-in-a-dead">Why does the use of an unbuffered channel in the same goroutine result in a deadlock?</a>
+<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:4" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://github.com/golang/sync/blob/master/errgroup/errgroup_example_md5all_test.go">errgroup_example_md5all_test.go</a>
+<a href="#fnref:4" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:5" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://gist.github.com/pteich/c0bb58b0b7c8af7cc6a689dd0d3d26ef">another errgroup example</a>
+<a href="#fnref:5" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:6" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.fullstory.com/blog/why-errgroup-withcontext-in-golang-server-handlers/">Why you should be using errgroup.WithContext() in your Golang server handlers</a>
+<a href="#fnref:6" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:7" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/40326723/go-vet-range-variable-captured-by-func-literal-when-using-go-routine-inside-of-f">go vet range variable captured by func literal when using go routine inside of for each loop</a>
+<a href="#fnref:7" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/golang/">golang</a>
+                    
+                      <a class="hover-with-bg" href="/tags/goroutine/">goroutine</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/12/26/%E4%BD%BF%E7%94%A8-Golang-%E5%AE%9E%E7%8E%B0-AES-%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">使用 Golang 实现 AES 加密算法</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/07/25/%E6%AF%95%E4%B8%9A%E6%97%85%E8%A1%8C%E6%B8%B8%E8%AE%B0%E2%80%94%E2%80%94%E5%8E%A6%E9%97%A8/">
+                        <span class="hidden-mobile">毕业旅行游记——厦门</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.lazyComments('waline', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/@waline/client@0.14.8/dist/Waline.min.js', function () {
+        new Waline({
+          el: "#waline",
+          placeholder: "说点什么",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: true,
+          serverURL: "https://imnerd-api-steel.vercel.app/",
+          avatarCDN: "",
+          avatarForce: false,
+          requiredFields: [],
+          emojiCDN: "",
+          emojiMaps: {},
+          anonymous: null,
+        });
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the
+    <a target="_blank" href="https://waline.js.org" rel="nofollow noopener noopener">comments powered by Waline.</a>
+  </noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
