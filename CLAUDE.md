@@ -45,8 +45,3 @@ This project uses **pnpm** for dependency management.
 
 - Source code: `backup` branch
 - Generated site: deployed to `master` branch via `hexo deploy`
-
-## Workflow Scripts
-
-- `helpScripts/blog-push.sh` - Push source to backup branch
-- `helpScripts/blog-pull.sh` - Pull latest source changes
