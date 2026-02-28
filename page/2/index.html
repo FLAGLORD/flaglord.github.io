@@ -1,24 +1,37 @@
 
 
 <!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+<html lang="zh-CN" data-default-color-scheme=auto>
 
 
 
 <head>
   <meta charset="UTF-8">
+
   <link rel="apple-touch-icon" sizes="76x76" href="/img/Rickicon2.ico">
   <link rel="icon" href="/img/Rickicon2.ico">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="">
   <meta name="author" content="flaglord">
   <meta name="keywords" content="">
+  
+    <meta property="og:type" content="website">
+<meta property="og:title" content="Flaglord">
+<meta property="og:url" content="https://flaglord.com/page/2/index.html">
+<meta property="og:site_name" content="Flaglord">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="flaglord">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
   
     <meta name="google-site-verification" content="2LnXQIXdhJV_gy8RXbAXgNcNzhllQC_Me3_qlIIkC3I" /> <meta name="baidu-site-verification" content="code-Y5g1WZqiGT" />
   
@@ -28,9 +41,12 @@
 
 
 
-<!-- 主题依赖的图标库，不要自行修改 -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
 
 
 
@@ -39,24 +55,46 @@
 
 <link  rel="stylesheet" href="/css/main.css" />
 
-<!-- 自定义样式保持在最底部 -->
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
 
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"flaglord.com","root":"/","version":"1.8.9a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":6},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"flaglord.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":6},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
 <body>
-  <header style="height: 100vh;">
-    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 100vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
-    <a class="navbar-brand"
-       href="/">&nbsp;<strong>Flaglord's Space</strong>&nbsp;</a>
+    <a class="navbar-brand" href="/">
+      <strong>Flaglord&#39;s Space</strong>
+    </a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#navbarSupportedContent"
@@ -73,9 +111,9 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/">
+              <a class="nav-link" href="/" target="_self">
                 <i class="iconfont icon-home-fill"></i>
-                首页
+                <span>首页</span>
               </a>
             </li>
           
@@ -85,9 +123,9 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/archives/">
+              <a class="nav-link" href="/archives/" target="_self">
                 <i class="iconfont icon-archive-fill"></i>
-                归档
+                <span>归档</span>
               </a>
             </li>
           
@@ -97,9 +135,9 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/categories/">
+              <a class="nav-link" href="/categories/" target="_self">
                 <i class="iconfont icon-category-fill"></i>
-                分类
+                <span>分类</span>
               </a>
             </li>
           
@@ -109,9 +147,9 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/tags/">
+              <a class="nav-link" href="/tags/" target="_self">
                 <i class="iconfont icon-tags-fill"></i>
-                标签
+                <span>标签</span>
               </a>
             </li>
           
@@ -121,23 +159,26 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/about/">
+              <a class="nav-link" href="/about/" target="_self">
                 <i class="iconfont icon-user-fill"></i>
-                关于
+                <span>关于</span>
               </a>
             </li>
           
         
         
           <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;</a>
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
           </li>
+          
         
         
           <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" href="javascript:">&nbsp;<i
-                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
           </li>
         
       </ul>
@@ -145,34 +186,40 @@
   </div>
 </nav>
 
-    <div class="banner" id="banner" parallax=true
-         style="background: url('/img/banner.jpg') no-repeat center center;
-           background-size: cover;">
-      <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title=" Always Keep A Beginner’s Mind.">
-              
-            </span>
+  
 
-            
-          </div>
-
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/banner.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
           
-            <div class="scroll-down-bar">
-              <i class="iconfont icon-arrowdown"></i>
-            </div>
+            <span id="subtitle" data-typed-text=" Always Keep A Beginner’s Mind."></span>
           
         </div>
+
+        
       </div>
+
+      
+        <div class="scroll-down-bar">
+          <i class="iconfont icon-arrowdown"></i>
+        </div>
+      
     </div>
+  </div>
+</div>
+
+</div>
+
   </header>
 
   <main>
     
       <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          style=margin-top:0>
+        <div id="board"
+          style="margin-top: 0">
           
           <div class="container">
             <div class="row">
@@ -184,23 +231,19 @@
     
     
     <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
+      <h2 class="index-header">
         
-        <a href="/2021/10/02/UniquePtr-C-implementation/">UniquePtr C++ implementation</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/10/02/UniquePtr-C-implementation/">
-          
-          
-            
-          
-          在之前的文章中我实现了 SharedPtr，而为了实现 UniquePtr 我阅读了一些文章[1]，意识到我之前的实现存在了大量的问题。正如文章作者所言，智能指针的实现并不适合作为学习材料，它看上去很简单，却存在着大量的陷阱。而 Boost 库的实现直到其成为 C++ 11 的标准，大概有九年的时间。
-不过既然开了坑，姑且硬着头皮写下去吧，毕竟也算作学习的一个过程。
-先给出代码：
-12345678
+        <a href="/2021/10/02/UniquePtr-C-implementation/" target="_self">
+          UniquePtr C++ implementation
         </a>
-      </p>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2021/10/02/UniquePtr-C-implementation/" target="_self">
+        <div>
+          在之前的文章中我实现了 SharedPtr，而为了实现 UniquePtr 我阅读了一些文章[1]，意识到我之前的实现存在了大量的问题。正如文章作者所言，智能指针的实现并不适合作为学习材料，它看上去很简单，却存在着大量的陷阱。而 Boost 库的实现直到其成为 C++ 11 的标准，大概有九年的时间。 不过既然开了坑，姑且硬着头皮写下去吧，毕竟也算作学习的一个过程。 先给出代码： 12345678
+        </div>
+      </a>
 
       <div class="index-btm post-metas">
         
@@ -212,20 +255,34 @@
           </div>
         
         
-          <div class="post-meta mr-3">
+          <div class="post-meta mr-3 d-flex align-items-center">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/C/">C++</a>
-            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/C/" class="category-chain-item">C++</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
           </div>
         
         
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/C/">C++</a>
+              <a href="/tags/C/">#C++</a>
             
-              <a href="/tags/interview/">interview</a>
+              <a href="/tags/interview/">#interview</a>
             
           </div>
         
@@ -237,24 +294,19 @@
     
     
     <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
+      <h2 class="index-header">
         
-        <a href="/2021/09/30/RWLock-C-implementation/">RWLock C++ implementation</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/09/30/RWLock-C-implementation/">
-          
-          
-            
-          
-          其实 boost 库已经有相关的实现，在实际工程中使用 boost 库的实现可能会使得我们程序更加健壮。
-这边展示的是一个比较 naive 的实现，逻辑上也并不复杂。
-成员变量readerCount记录正在临界区的读者数量，mutexReader以及mutexWriter实现相应的控制逻辑
-WLock和WUnlock比较简单，就是直接对mutexWriter进行加锁和放锁
-而在RLock中，首先会
+        <a href="/2021/09/30/RWLock-C-implementation/" target="_self">
+          RWLock C++ implementation
         </a>
-      </p>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2021/09/30/RWLock-C-implementation/" target="_self">
+        <div>
+          其实 boost 库已经有相关的实现，在实际工程中使用 boost 库的实现可能会使得我们程序更加健壮。 这边展示的是一个比较 naive 的实现，逻辑上也并不复杂。 成员变量readerCount记录正在临界区的读者数量，mutexReader以及mutexWriter实现相应的控制逻辑 WLock和WUnlock比较简单，就是直接对mutexWriter进行加锁和放锁 而在RLock中，首先会
+        </div>
+      </a>
 
       <div class="index-btm post-metas">
         
@@ -266,20 +318,34 @@ WLock和WUnlock比较简单，就是直接对mutexWriter进行加锁和放锁
           </div>
         
         
-          <div class="post-meta mr-3">
+          <div class="post-meta mr-3 d-flex align-items-center">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/C/">C++</a>
-            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/C/" class="category-chain-item">C++</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
           </div>
         
         
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/C/">C++</a>
+              <a href="/tags/C/">#C++</a>
             
-              <a href="/tags/interview/">interview</a>
+              <a href="/tags/interview/">#interview</a>
             
           </div>
         
@@ -291,21 +357,19 @@ WLock和WUnlock比较简单，就是直接对mutexWriter进行加锁和放锁
     
     
     <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
+      <h2 class="index-header">
         
-        <a href="/2021/09/29/Vector-C-implementation/">Vector C++ implementation</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/09/29/Vector-C-implementation/">
-          
-          
-            
-          
-          成员变量cap_记录了容量大小，而size_则记录了实际存储的元素的数量，iniVal作为const值表示MyVector对象创建时为其预分配的容量大小，vector则是指针，其指向的应该是对象数组的起始地址
-12345private:    T *vector = nullptr;    size_t cap_;    size_t size_;    const int iniVal = 20
+        <a href="/2021/09/29/Vector-C-implementation/" target="_self">
+          Vector C++ implementation
         </a>
-      </p>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2021/09/29/Vector-C-implementation/" target="_self">
+        <div>
+          成员变量cap_记录了容量大小，而size_则记录了实际存储的元素的数量，iniVal作为const值表示MyVector对象创建时为其预分配的容量大小，vector则是指针，其指向的应该是对象数组的起始地址 12345private:    T *vector = nullptr;    size_t cap_;    size_t size_;    const int iniVal = 20
+        </div>
+      </a>
 
       <div class="index-btm post-metas">
         
@@ -317,20 +381,34 @@ WLock和WUnlock比较简单，就是直接对mutexWriter进行加锁和放锁
           </div>
         
         
-          <div class="post-meta mr-3">
+          <div class="post-meta mr-3 d-flex align-items-center">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/C/">C++</a>
-            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/C/" class="category-chain-item">C++</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
           </div>
         
         
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/C/">C++</a>
+              <a href="/tags/C/">#C++</a>
             
-              <a href="/tags/interview/">interview</a>
+              <a href="/tags/interview/">#interview</a>
             
           </div>
         
@@ -342,22 +420,19 @@ WLock和WUnlock比较简单，就是直接对mutexWriter进行加锁和放锁
     
     
     <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
+      <h2 class="index-header">
         
-        <a href="/2021/09/29/Sharedptr-C-implementation/">Sharedptr C++ implementation</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/09/29/Sharedptr-C-implementation/">
-          
-          
-            
-          
-          前言回望最初版本的shared_ptr，其实存在着很多问题，比如没有考虑 Constructor Failure以及未使用 copy-and-swap idiom来解决 code duplicate 等.
-在这里我打算保留最初的版本，并添加说明对此进行更正
-Old Version成员变量ptr用于保存共享的指针，而 refCount则是计数器，在这里注意 refCount是指针，这样的话可以做到多
+        <a href="/2021/09/29/Sharedptr-C-implementation/" target="_self">
+          Sharedptr C++ implementation
         </a>
-      </p>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2021/09/29/Sharedptr-C-implementation/" target="_self">
+        <div>
+          前言回望最初版本的shared_ptr，其实存在着很多问题，比如没有考虑 Constructor Failure以及未使用 copy-and-swap idiom来解决 code duplicate 等. 在这里我打算保留最初的版本，并添加说明对此进行更正 Old Version成员变量ptr用于保存共享的指针，而 refCount则是计数器，在这里注意 refCount是指针，这样的话可以做到多
+        </div>
+      </a>
 
       <div class="index-btm post-metas">
         
@@ -369,20 +444,34 @@ Old Version成员变量ptr用于保存共享的指针，而 refCount则是计数
           </div>
         
         
-          <div class="post-meta mr-3">
+          <div class="post-meta mr-3 d-flex align-items-center">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/C/">C++</a>
-            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/C/" class="category-chain-item">C++</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
           </div>
         
         
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/C/">C++</a>
+              <a href="/tags/C/">#C++</a>
             
-              <a href="/tags/interview/">interview</a>
+              <a href="/tags/interview/">#interview</a>
             
           </div>
         
@@ -394,22 +483,19 @@ Old Version成员变量ptr用于保存共享的指针，而 refCount则是计数
     
     
     <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
+      <h2 class="index-header">
         
-        <a href="/2021/09/29/BoundedBuffer-C-implementation/">BoundedBuffer C++ implementation</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/09/29/BoundedBuffer-C-implementation/">
-          
-          
-            
-          
-          本文讲述了 BoundedBuffer 的 C++ 实现，而 BoundedBuffer 常常用于生产者和消费者模式中
-在 boost 库的 circular_buffer文档中讲述了如何使用 circular_buffer来构建BoundedBuffer[1],我基于 boost 库的例子做了个改写，代码如下
-1234567891011121314151617181920212223242526
+        <a href="/2021/09/29/BoundedBuffer-C-implementation/" target="_self">
+          BoundedBuffer C++ implementation
         </a>
-      </p>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2021/09/29/BoundedBuffer-C-implementation/" target="_self">
+        <div>
+          本文讲述了 BoundedBuffer 的 C++ 实现，而 BoundedBuffer 常常用于生产者和消费者模式中 在 boost 库的 circular_buffer文档中讲述了如何使用 circular_buffer来构建BoundedBuffer[1],我基于 boost 库的例子做了个改写，代码如下 1234567891011121314151617181920212223242526
+        </div>
+      </a>
 
       <div class="index-btm post-metas">
         
@@ -421,20 +507,34 @@ Old Version成员变量ptr用于保存共享的指针，而 refCount则是计数
           </div>
         
         
-          <div class="post-meta mr-3">
+          <div class="post-meta mr-3 d-flex align-items-center">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/C/">C++</a>
-            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/C/" class="category-chain-item">C++</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
           </div>
         
         
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/C/">C++</a>
+              <a href="/tags/C/">#C++</a>
             
-              <a href="/tags/interview/">interview</a>
+              <a href="/tags/interview/">#interview</a>
             
           </div>
         
@@ -446,26 +546,19 @@ Old Version成员变量ptr用于保存共享的指针，而 refCount则是计数
     
     
     <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
+      <h2 class="index-header">
         
-        <a href="/2021/09/14/%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%BA%94%E8%AF%A5%E5%9C%A8%E6%9E%84%E9%80%A0%E5%92%8C%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0%E4%B8%AD%E8%B0%83%E7%94%A8%E8%99%9A%E5%87%BD%E6%95%B0/">为什么不应该在构造和析构函数中调用虚函数</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/09/14/%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%BA%94%E8%AF%A5%E5%9C%A8%E6%9E%84%E9%80%A0%E5%92%8C%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0%E4%B8%AD%E8%B0%83%E7%94%A8%E8%99%9A%E5%87%BD%E6%95%B0/">
-          
-          
-            
-          
-          其实这来自于 《Effective C++》 Rule 09：
-
-            Never call virtual functions during construction or destruction
-          
-
-这一点主要是因为构造函数和析构函数比较特殊
-12345678910111213141516171819202122232425262728#include &
+        <a href="/2021/09/14/%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%BA%94%E8%AF%A5%E5%9C%A8%E6%9E%84%E9%80%A0%E5%92%8C%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0%E4%B8%AD%E8%B0%83%E7%94%A8%E8%99%9A%E5%87%BD%E6%95%B0/" target="_self">
+          为什么不应该在构造和析构函数中调用虚函数
         </a>
-      </p>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2021/09/14/%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%BA%94%E8%AF%A5%E5%9C%A8%E6%9E%84%E9%80%A0%E5%92%8C%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0%E4%B8%AD%E8%B0%83%E7%94%A8%E8%99%9A%E5%87%BD%E6%95%B0/" target="_self">
+        <div>
+          其实这来自于 《Effective C++》 Rule 09：              Never call virtual functions during construction or destruction             这一点主要是因为构造函数和析构函数比较特殊 12345678910111213141516171819202122232425262728#include &
+        </div>
+      </a>
 
       <div class="index-btm post-metas">
         
@@ -481,15 +574,15 @@ Old Version成员变量ptr用于保存共享的指针，而 refCount则是计数
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/C/">C++</a>
+              <a href="/tags/C/">#C++</a>
             
-              <a href="/tags/Effective-C/">Effective C++</a>
+              <a href="/tags/Effective-C/">#Effective C++</a>
             
-              <a href="/tags/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/">构造函数</a>
+              <a href="/tags/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/">#构造函数</a>
             
-              <a href="/tags/%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0/">析构函数</a>
+              <a href="/tags/%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0/">#析构函数</a>
             
-              <a href="/tags/%E8%99%9A%E5%87%BD%E6%95%B0/">虚函数</a>
+              <a href="/tags/%E8%99%9A%E5%87%BD%E6%95%B0/">#虚函数</a>
             
           </div>
         
@@ -501,22 +594,19 @@ Old Version成员变量ptr用于保存共享的指针，而 refCount则是计数
     
     
     <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
+      <h2 class="index-header">
         
-        <a href="/2021/09/07/Is-KMP-always-faster/">Is KMP always faster?</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/09/07/Is-KMP-always-faster/">
-          
-          
-            
-          
-          本文比对了 KMP 以及  C++ string 的find方法在检查 a 是否为 b 子串这一问题上的效率。
-尽管字符串长度已经达到了  104 这一量级，但是在 test case 数量为 105 时，KMP 表现仍没有find好.
-首先，毫无疑问，从时间复杂度上分析，KMP 确实胜于 find的暴力匹配，但是 KMP 会在 build next table 上花费比较多的时间，在字符串长度仍
+        <a href="/2021/09/07/Is-KMP-always-faster/" target="_self">
+          Is KMP always faster?
         </a>
-      </p>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2021/09/07/Is-KMP-always-faster/" target="_self">
+        <div>
+          本文比对了 KMP 以及  C++ string 的find方法在检查 a 是否为 b 子串这一问题上的效率。 尽管字符串长度已经达到了  104 这一量级，但是在 test case 数量为 105 时，KMP 表现仍没有find好. 首先，毫无疑问，从时间复杂度上分析，KMP 确实胜于 find的暴力匹配，但是 KMP 会在 build next table 上花费比较多的时间，在字符串长度仍
+        </div>
+      </a>
 
       <div class="index-btm post-metas">
         
@@ -532,11 +622,11 @@ Old Version成员变量ptr用于保存共享的指针，而 refCount则是计数
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/C/">C++</a>
+              <a href="/tags/C/">#C++</a>
             
-              <a href="/tags/KMP/">KMP</a>
+              <a href="/tags/KMP/">#KMP</a>
             
-              <a href="/tags/algorithm/">algorithm</a>
+              <a href="/tags/algorithm/">#algorithm</a>
             
           </div>
         
@@ -548,22 +638,19 @@ Old Version成员变量ptr用于保存共享的指针，而 refCount则是计数
     
     
     <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
+      <h2 class="index-header">
         
-        <a href="/2021/09/02/How-https-work/">How https work?</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/09/02/How-https-work/">
-          
-          
-            
-          
-          讲 https 的文章其实已经挺多了，在这里不赘述了，可以参考 Cloudflare 官网上的这篇文章[1]以及 The First Few Milliseconds of an HTTPS Connection[2]
-在这里主要是讲讲在 TLS 中为什么需要 Client Random 以及 Server Random. 
-导言首先先从 https 如何防止 MITM(Man-In-The-Mi
+        <a href="/2021/09/02/How-https-work/" target="_self">
+          How https work?
         </a>
-      </p>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2021/09/02/How-https-work/" target="_self">
+        <div>
+          讲 https 的文章其实已经挺多了，在这里不赘述了，可以参考 Cloudflare 官网上的这篇文章[1]以及 The First Few Milliseconds of an HTTPS Connection[2] 在这里主要是讲讲在 TLS 中为什么需要 Client Random 以及 Server Random.  导言首先先从 https 如何防止 MITM(Man-In-The-Mi
+        </div>
+      </a>
 
       <div class="index-btm post-metas">
         
@@ -579,7 +666,7 @@ Old Version成员变量ptr用于保存共享的指针，而 refCount则是计数
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/https/">https</a>
+              <a href="/tags/https/">#https</a>
             
           </div>
         
@@ -591,21 +678,19 @@ Old Version成员变量ptr用于保存共享的指针，而 refCount则是计数
     
     
     <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
+      <h2 class="index-header">
         
-        <a href="/2021/07/31/Consistency-and-consensus/">Consistency and consensus</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/07/31/Consistency-and-consensus/">
-          
-          
-            
-          
-          Introduction在分布式系统中我们提到的 consistency 不同于 ACID 的 consistency (或者说是 correctness), 它描述了在 replicated database 中我们在某一时刻在不同的节点看到的数据状态应该是怎么样的。
-在最为理想的情况下，如果系统提供的是强一致性的保证，针对某一个数据项的更新操作成功后，那么所有的用户都可以立刻读取到更新后的值。
+        <a href="/2021/07/31/Consistency-and-consensus/" target="_self">
+          Consistency and consensus
         </a>
-      </p>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2021/07/31/Consistency-and-consensus/" target="_self">
+        <div>
+          Introduction在分布式系统中我们提到的 consistency 不同于 ACID 的 consistency (或者说是 correctness), 它描述了在 replicated database 中我们在某一时刻在不同的节点看到的数据状态应该是怎么样的。 在最为理想的情况下，如果系统提供的是强一致性的保证，针对某一个数据项的更新操作成功后，那么所有的用户都可以立刻读取到更新后的值。
+        </div>
+      </a>
 
       <div class="index-btm post-metas">
         
@@ -621,11 +706,11 @@ Old Version成员变量ptr用于保存共享的指针，而 refCount则是计数
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Distributes-System/">Distributes System</a>
+              <a href="/tags/Distributes-System/">#Distributes System</a>
             
-              <a href="/tags/consistency/">consistency</a>
+              <a href="/tags/consistency/">#consistency</a>
             
-              <a href="/tags/ACID/">ACID</a>
+              <a href="/tags/ACID/">#ACID</a>
             
           </div>
         
@@ -637,21 +722,19 @@ Old Version成员变量ptr用于保存共享的指针，而 refCount则是计数
     
     
     <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
+      <h2 class="index-header">
         
-        <a href="/2021/07/25/transaction/">DDIA-transaction学习</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/07/25/transaction/">
-          
-          
-            
-          
-          ACID
-Atomicity: All-Or-Nothing. Transaction 涉及到的多个操作要么一同完成，要么什么都没有做，不能处于 half-finished 的状态。因为各种各样的 fault （比如crash、network connection interruption 以及 disk fail 等问题）可能会导致事务中的操作并没有全部完成，atomicity 为数据库的状态提
+        <a href="/2021/07/25/transaction/" target="_self">
+          DDIA-transaction学习
         </a>
-      </p>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2021/07/25/transaction/" target="_self">
+        <div>
+          ACID Atomicity: All-Or-Nothing. Transaction 涉及到的多个操作要么一同完成，要么什么都没有做，不能处于 half-finished 的状态。因为各种各样的 fault （比如crash、network connection interruption 以及 disk fail 等问题）可能会导致事务中的操作并没有全部完成，atomicity 为数据库的状态提
+        </div>
+      </a>
 
       <div class="index-btm post-metas">
         
@@ -667,9 +750,9 @@ Atomicity: All-Or-Nothing. Transaction 涉及到的多个操作要么一同完�
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Distributed-System/">Distributed System</a>
+              <a href="/tags/Distributed-System/">#Distributed System</a>
             
-              <a href="/tags/transaction/">transaction</a>
+              <a href="/tags/transaction/">#transaction</a>
             
           </div>
         
@@ -695,7 +778,7 @@ Atomicity: All-Or-Nothing. Transaction 涉及到的多个操作要么一同完�
     
 
     
-      <a id="scroll-top-button" href="#" role="button">
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
         <i class="iconfont icon-arrowup" aria-hidden="true"></i>
       </a>
     
@@ -714,56 +797,59 @@ Atomicity: All-Or-Nothing. Transaction 涉及到的多个操作要么一同完�
       <div class="modal-body mx-3">
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
     </div>
   </div>
 </div>
+
     
 
     
   </main>
 
-  <footer class="text-center mt-5 py-3">
-  <div class="footer-content">
-     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
-  </div>
+  <footer>
+    <div class="footer-inner">
   
-  <div class="statistics">
-    
-    
-
-    
-      
-        <!-- 不蒜子统计PV -->
-        <span id="busuanzi_container_site_pv" style="display: none">
-            总访问量 
-            <span id="busuanzi_value_site_pv"></span>
-             次
-          </span>
-      
-      
-        <!-- 不蒜子统计UV -->
-        <span id="busuanzi_container_site_uv" style="display: none">
-            总访客数 
-            <span id="busuanzi_value_site_uv"></span>
-             人
-          </span>
-      
-    
-  </div>
-
-
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
   
 
   
-</footer>
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
 
+  
 
-  <!-- SCRIPTS -->
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
   
   <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
@@ -779,11 +865,26 @@ Atomicity: All-Or-Nothing. Transaction 涉及到的多个操作要么一同完�
 
 <script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
 <script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
-<script  src="/js/debouncer.js" ></script>
 <script  src="/js/events.js" ></script>
 <script  src="/js/plugins.js" ></script>
 
-<!-- Plugins -->
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
 
 
   
@@ -792,68 +893,24 @@ Atomicity: All-Or-Nothing. Transaction 涉及到的多个操作要么一同完�
 
 
 
-  
 
-
-
-
-
-
-
-
-
-  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
-
-
+  <script  src="/js/local-search.js" ></script>
 
   <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
 
 
 
 
-  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
-  <script>
-    (function (window, document) {
-      var typing = Fluid.plugins.typing;
-      var title = document.getElementById('subtitle').title;
-      
-      typing(title)
-      
-    })(window, document);
-  </script>
 
-
-
-  <script  src="/js/local-search.js" ></script>
-  <script>
-    (function () {
-      var path = "/local-search.xml";
-      $('#local-search-input').on('click', function() {
-        searchFunc(path, 'local-search-input', 'local-search-result');
-      });
-      $('#modalSearch').on('shown.bs.modal', function() {
-        $('#local-search-input').focus();
-      });
-    })()
-  </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- 主题的启动项 保持在最底部 -->
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
 <script  src="/js/boot.js" ></script>
 
 
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
 </body>
 </html>
