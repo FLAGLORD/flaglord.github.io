@@ -10,7 +10,7 @@ This is a Hexo static blog using the Fluid theme, deployed to GitHub Pages at fl
 
 ```bash
 # Development server with hot reload
-pnpm server
+pnpm run server
 
 # Build static files to ./public
 pnpm build
@@ -19,7 +19,7 @@ pnpm build
 pnpm clean
 
 # Deploy to GitHub Pages
-pnpm deploy
+pnpm run deploy
 
 # Create a new post
 pnpm exec hexo new post "post-title"
