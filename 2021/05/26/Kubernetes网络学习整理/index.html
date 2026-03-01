@@ -306,8 +306,8 @@
             <p>根据官方的<a target="_blank" rel="noopener" href="https://docs.docker.com/desktop/networking/#use-cases-and-workarounds">文档</a>，mac 用户在宿主机上应该找不到 <code>docker0</code>这个网桥</p>
           </div>
 
-<p>Docker 会从 RFC1918 定义的私有 IP 网段中选择一个网段来供 docker0 以及容器使用。Docker 一般会使用 172.17.0.0/16 这个网段，并将 172.16.0.1/16 分配给 docker0 网桥（当然这个网段可以在 Docker Daemon启动时通过<code>--bip=CDIR</code>自行配置）。</p>
-<p>由于容器 Network Namespace 与宿主机隔离，所以容器是看不到 docker0 这个设备的。为了与同宿主机的其他容器通信，docker 会创建一对 veth pair,它组成一个数据通道，一段放在新创建的容器中，命名为 eth0,另一端在宿主机中，名字的形式一般为 vethxxx,并将该设备加入到 docker0 网桥中，docker 会为 eth0 从前文提到的172.17.0.0/16 选取一个未被占用的 ip 进行设置 ，同时容器的默认网关会设置成 docker0 的 ip 地址（即 172.17.0.1），即访问非本机容器网段会经过 docker0 网关进行转发，而同主机（同网段）之间通过广播通信（route 中可以看到一条 Gateway 0.0.0.0 的记录，表示其不需要路由）。</p>
+<p>Docker 会从 RFC1918 定义的私有 IP 网段中选择一个网段来供 docker0 以及容器使用。Docker 一般会使用 172.17.0.0&#x2F;16 这个网段，并将 172.16.0.1&#x2F;16 分配给 docker0 网桥（当然这个网段可以在 Docker Daemon启动时通过<code>--bip=CDIR</code>自行配置）。</p>
+<p>由于容器 Network Namespace 与宿主机隔离，所以容器是看不到 docker0 这个设备的。为了与同宿主机的其他容器通信，docker 会创建一对 veth pair,它组成一个数据通道，一段放在新创建的容器中，命名为 eth0,另一端在宿主机中，名字的形式一般为 vethxxx,并将该设备加入到 docker0 网桥中，docker 会为 eth0 从前文提到的172.17.0.0&#x2F;16 选取一个未被占用的 ip 进行设置 ，同时容器的默认网关会设置成 docker0 的 ip 地址（即 172.17.0.1），即访问非本机容器网段会经过 docker0 网关进行转发，而同主机（同网段）之间通过广播通信（route 中可以看到一条 Gateway 0.0.0.0 的记录，表示其不需要路由）。</p>
 <p>因为 docker0 以及容器的 IP是私网 IP，在外部网络上不能使用，所以想要和外部世界通信需要用到<strong>NAT</strong>(Network Address Translation).容器想要访问外部世界，需要采用 SNAT 来借用宿主机的 IP 去访问，而容器如果对外界提供服务，则采用 DNAT ，使用宿主机的端口通过 iptable 或者别的某些机制，将流导入到容器上。在这里，可以认为 linux 主机发挥了交换机的功能。</p>
 <h2 id="Docker-网络的优劣分析"><a href="#Docker-网络的优劣分析" class="headerlink" title="Docker 网络的优劣分析"></a>Docker 网络的优劣分析</h2><p>Docker 的网络模型比较简单，即内部的网桥 + 内部的保留 IP，从而做到容器网络和外部世界的解耦。然而这样做，外部网络难以区分哪些是容器的网络与流量，哪些是宿主机的网络与容量，如果要做一个高可用，172.16.1.1 和 176.16.1.2 是拥有同样功能的容器，我们需要将两者绑成一个 Group 对外提供服务，而从外部来看两者没有什么相同之处，因为它们会借用宿主机的 IP 和端口。</p>
 <p><strong>原生</strong> Docker 网络模型是单主机模式，默认配置下，不同宿主机上的容器无法通过 IP 互相访问，而大规模容器部署势必涉及不同主机的网络通信。Docker 一方面将 SocketPlane 整合至其集群管理项目 Swarm 中，另一方面将网络管理从 Docker Daemon 中独立出来形成 Libnetwork 并提供多种网络驱动以及允许第三方网络管理工具以插件形式来替代内置的网络功能（接口是 CNM）,以两者作为跨主机通信的解决方案</p>
@@ -321,7 +321,7 @@
 <li><strong>host-gw</strong></li>
 </ol>
 <p>flannel 基本模型是集群使用一个网段，每个 node 从网段上划分一个子网，而在主机上为容器创建网络时，再从子网上划分一个 IP 给容器。这个模型跟 k8s 的 perPodperIp 模型契合得非常好</p>
-<p>docker 上各个节点的容器  IP 地址是所属节点自动分配的，从全局上来看就像是不同小区的门牌号，在更大的范围上来观察就可能是重复的（每个主机上都有 172.16.0.2/16）。flannel 在 k8s  中使用 etcd 存储网段和节点的映射关系，然后再在各个节点上进行配置，确保节点只从分配到的网段中给容器分配 IP 地址。</p>
+<p>docker 上各个节点的容器  IP 地址是所属节点自动分配的，从全局上来看就像是不同小区的门牌号，在更大的范围上来观察就可能是重复的（每个主机上都有 172.16.0.2&#x2F;16）。flannel 在 k8s  中使用 etcd 存储网段和节点的映射关系，然后再在各个节点上进行配置，确保节点只从分配到的网段中给容器分配 IP 地址。</p>
 <p>仅仅地址不重复，网络仍无法联通。因为通常虚拟网络的 IP 和 MAC 地址在物理网络上是不认识的（why?），所以即使发送到网络中，也无法进行路由。所有 flannel  早期的实现方式是 overlay，即隧道网络，下面提到的 UDP 和 VXLAN 都属于 overlay，而 host-gateway则是路由，它是第二种解决容器网络地址路由的方法.</p>
 <h3 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h3><p>关键设备：<strong>TUN（tunnel）设备</strong>：它可以在操作系统内核以及用户应用程序之间传递网络包</p>
 <p>Node 1的 Container-1发向 Node  2的 Container-2 的网络包进入网桥并出现在宿主机上后，Flannel 已经在宿主机上创建了一系列路由规则，网络包会依据规则进入 flannel0 设备（tun设备），它会将 网络包发往用户态的 flanneld 进程，flanneld 可以根据目的 IP 地址匹配到对应的子网（做一下 mask 就行了），在 etcd 中可以找到子网对应的宿主机 IP 地址，将原 IP 包（为什么是IP包：因为tun 是在网络层工作的设备）封装成 UDP 包发向目标宿主机，这个 UDP 的源地址便是宿主机 Node 1的地址。</p>
@@ -330,25 +330,25 @@
 <h3 id="VXLAN"><a href="#VXLAN" class="headerlink" title="VXLAN"></a>VXLAN</h3><p>VXLAN 在内核实现解封装功能，从而相比于 UDP 极大地改善了性能</p>
 <p>VXLAN 在宿主机上设置的特殊设备为 <strong>VTEP（VXLAN tunnel end  point,虚拟隧道端点）</strong>，它解封转的对象为二层数据帧（Ethernet frame）</p>
 <p>假设 Container-1(IP 地址 10.1.15.2)要访问 Container-2(IP 地址为10.1.16.3).Container-1 发出的包出现在网桥，会被路由到本机的 flannel.1设备(VTEP)进行处理,这里是隧道的入口。</p>
-<p>当 Node2启动后并加入网络中，各个节点包括 Node 1上的 flannel 进程会添加一条路由规则，凡是发往 Node 2网段的 IP 包，都需要经由 flannel.1 设备发出，并且最后发向的网关地址正是 node-2 上 flannel.1 设备的 IP 地址。（这个地址是否是 flannel.1 的 IP 地址存疑，我看到一些书的 example 中这个 IP 地址很特殊,正好是 10.1.16.0/24,正好是分配到的子网号+主机号置为0的结果，但是查询下面的ARP记录获得的 mac 地址的确是 node 2 上 flannel.1 的 mac 地址 ）</p>
+<p>当 Node2启动后并加入网络中，各个节点包括 Node 1上的 flannel 进程会添加一条路由规则，凡是发往 Node 2网段的 IP 包，都需要经由 flannel.1 设备发出，并且最后发向的网关地址正是 node-2 上 flannel.1 设备的 IP 地址。（这个地址是否是 flannel.1 的 IP 地址存疑，我看到一些书的 example 中这个 IP 地址很特殊,正好是 10.1.16.0&#x2F;24,正好是分配到的子网号+主机号置为0的结果，但是查询下面的ARP记录获得的 mac 地址的确是 node 2 上 flannel.1 的 mac 地址 ）</p>
 <p>对于隧道入口的包，要想发送往另一端需要加上目的地的 mac 地址，封装成二层数据帧进行发送。现在路由记录已经告知了 node 2 VTEP 设备的 IP 地址，需要用到 ARP 表根据三层 IP 地址查询对应的 IP 地址。而这里用到的 ARP 记录，同样是 node 2 加入时由 flanneld 进程自动添加到节点 node 1 上的。（这里并没有依赖 L3 MISS 事件以及 ARP 学习）。</p>
 <p>VTEP 的 MAC 地址对于宿主机网络来说没有什么实际意义，所以目前封装的数据帧仍无法在宿主机二层网络里传播。接下来需要将它当做内部数据帧进一步封装成宿主机网络中的普通数据帧，通过宿主机的 eth0 网卡进行传输。内核会在内部数据帧前加上特殊的 VXLAN 头，VXLAN 头有一个 VNI 标志，它是 VTEP 设备识别某个数据帧是否应该由自己处理的标识，而在 flannel 中，这个默认值是1，这也是宿主机 VTEP 设备叫做 flannel.1 的原因。加上特殊的头后，内核将其装进 UDP 包进行发送。</p>
 <p>通过 UDP 包进行发送需要知道目标宿主机的 IP 地址。在这种情况下， flannel.1设备扮演“网桥”的角色，其转发的依据来自于 <strong>FDB（forwarding database）</strong>，<em>这里是使用 node 2 的 VTEP 设备的 mac 地址去查询的</em>.FDB 信息同样是由 flanneld 进程负责维护。有了 ip 地址，再将 nod 2 的 mac 地址填进去便封装完毕（这个 mac 地址不需要 flanneld 来维护，可以通过 ARP 学习获得）</p>
-<p>发送后的包来到 Node 2的 eth0 网卡，内核网络栈会发现数据帧有 VXLAN Header 且 VNI = 1,所以 Linux 会对它进行拆包 ，获取内部数据帧，并依据 VNI交给 node 2 上的 flannel.1设备。flannel.1 设备会进一步拆包，取出“原始 IP 包”，并依据前面 UDP 中提到的流程进行处理，最终送达。</p>
+<p>发送后的包来到 Node 2的 eth0 网卡，内核网络栈会发现数据帧有 VXLAN Header 且 VNI &#x3D; 1,所以 Linux 会对它进行拆包 ，获取内部数据帧，并依据 VNI交给 node 2 上的 flannel.1设备。flannel.1 设备会进一步拆包，取出“原始 IP 包”，并依据前面 UDP 中提到的流程进行处理，最终送达。</p>
 <h3 id="host-gw"><a href="#host-gw" class="headerlink" title="host-gw"></a>host-gw</h3><p>上面提到 Host-gw 是一种路由方案，其工作原理就是将下一跳设置为所要访问的 POD 所在宿主机的 IP 地址（这个 IP 地址不是 flannel 分配的，而是宿主机的 Public IP）,即目的主机会充当这条容器访问路径的网关</p>
-<p>举例说明，假设 Node-1(IP : 10.168.0.2/24)上的 container-1(IP : 10.244.0.2)要访问 Node-2 (IP : 10.168.0.3/24)上的 container-2(IP : 10.244.1.3)，flannel 的 host-gw 模式会在宿主机创建一条路由规则：目的地址属于 10.244.1.0/24 网段的 IP 包经过本机 eth0 设备发出，且下一跳（Gateway）为 10.168.0.3, 即Node-2的 IP 地址。有了下一跳地址，当 IP 包在链路层封装时会使用 Node-2 的 MAC 地址，这样数据包就能成功地从 Node-1 送往 Node-2</p>
-<p>而Node-2 内核栈从二层数据帧中获取 IP 包后，会注意到 IP 目的地址为 10.244.1.3，而Node-2将会有以下一条路由规则：目的地址属于 10.244.1.0/24 网段的 IP 包会交给 cni0 网桥进行处理，从而进入 container-2.</p>
+<p>举例说明，假设 Node-1(IP : 10.168.0.2&#x2F;24)上的 container-1(IP : 10.244.0.2)要访问 Node-2 (IP : 10.168.0.3&#x2F;24)上的 container-2(IP : 10.244.1.3)，flannel 的 host-gw 模式会在宿主机创建一条路由规则：目的地址属于 10.244.1.0&#x2F;24 网段的 IP 包经过本机 eth0 设备发出，且下一跳（Gateway）为 10.168.0.3, 即Node-2的 IP 地址。有了下一跳地址，当 IP 包在链路层封装时会使用 Node-2 的 MAC 地址，这样数据包就能成功地从 Node-1 送往 Node-2</p>
+<p>而Node-2 内核栈从二层数据帧中获取 IP 包后，会注意到 IP 目的地址为 10.244.1.3，而Node-2将会有以下一条路由规则：目的地址属于 10.244.1.0&#x2F;24 网段的 IP 包会交给 cni0 网桥进行处理，从而进入 container-2.</p>
 <p>在这里 ,flanneld 做的事情是 WATCH etcd 中主机和子网映射信息的变化来及时更新路由表。</p>
 <p>这种模式免除了额外封包和解包带来的性能损耗，性能损失在 10% 左右，而其他基于 VXLAN 机制的网络方案大概在 20%-30%</p>
 <p>host-gw 对底层网络有一定要求，即集群宿主机之间是二层连通的，所以如果宿主机分布在不同的子网，它们 IP 上是可通的（Node1 所在的 VLAN 的 router 可以连接 Node2所在 VLAN 的 router），但由于二层不通，即使拥有 Node-2 的 mac 地址，而在 Node-1所在的 VLAN 里是找不到它的。</p>
-<p>一个直观的想法可能是干脆在 Node1 上添加到 Node2 网段（10.244.1.0/24，注意这不是个 Public IP）经由 router-1的路由规则，router-1中添加到 Node2 网段经由 router-2 的路由规则，以此类推来添加下一跳路由，最终转发到 Node2中。虽然通过 BGP 是有可能达成的，但是在 k8s 广泛使用的公有云场景中却不行 ，因为我们可以设置宿主机的路由表，但是公有云宿主机之间的网关不允许用户随意干预设置。</p>
+<p>一个直观的想法可能是干脆在 Node1 上添加到 Node2 网段（10.244.1.0&#x2F;24，注意这不是个 Public IP）经由 router-1的路由规则，router-1中添加到 Node2 网段经由 router-2 的路由规则，以此类推来添加下一跳路由，最终转发到 Node2中。虽然通过 BGP 是有可能达成的，但是在 k8s 广泛使用的公有云场景中却不行 ，因为我们可以设置宿主机的路由表，但是公有云宿主机之间的网关不允许用户随意干预设置。</p>
 <h3 id="补充：-Calico"><a href="#补充：-Calico" class="headerlink" title="补充： Calico"></a>补充： Calico</h3><p>Calico 像 Flannel host-gw 一样是一个三层网络方案，实际上，其实现几乎是跟 Flannel host-gw 完全一样。不过 Flannel 使用 etcd 和 宿主机上的 flanneld 进程维护路由信息，而 Calico 则是使用 BGP 协议。</p>
 <p>需要注意的是 Calico 中没有使用网桥，因此宿主机上需要添加以下一条路由规则：</p>
 <figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-symbol">CONTAINER</span>-<span class="hljs-built_in">IP</span> dev calixxxx scope link<br></code></pre></td></tr></table></figure>
 
 <p>意思是发往宿主机上某容器的 IP 包应该进入 calixxxx 设备，而 calixxxx 正是 veth  pair 在 host 的一端。</p>
 <p>而当容器包想要发送时会走默认路由</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">default</span> via <span class="hljs-number">169.254.1.1</span> dev eth<span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">default</span> via <span class="hljs-number">169.254.1.1</span> dev eth0<br></code></pre></td></tr></table></figure>
 
 <p>veth pair 一端的数据确实会从另一端出来，然而回忆一下，在<a href="#jump">详解 bridge</a>中容器默认网关的 IP 地址是网桥的 IP 地址，这个 169.254.1.1 又是谁的呢？</p>
 <p>实际上 Calico 并没有真正把 169.254.1.1 这个 IP 分配给谁，这里使用到了<code>proxy_arp</code>功能，开启后 host 会响应所有的 ARP 请求，即使这个 IP 地址并非属于自己。如此，容器和主机网络才算打通。</p>

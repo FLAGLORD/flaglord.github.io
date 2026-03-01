@@ -33,7 +33,7 @@
 <meta property="og:image" content="https://flaglord.com/2021/07/08/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/lvs_nat.svg">
 <meta property="og:image" content="https://flaglord.com/2021/07/08/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/lvs_iptunneling.svg">
 <meta property="article:published_time" content="2021-07-07T16:31:43.000Z">
-<meta property="article:modified_time" content="2022-03-26T09:39:35.686Z">
+<meta property="article:modified_time" content="2026-03-01T07:58:02.337Z">
 <meta property="article:author" content="flaglord">
 <meta property="article:tag" content="负载均衡">
 <meta name="twitter:card" content="summary_large_image">
@@ -290,7 +290,7 @@
                 
                   
                     <!-- compatible with older versions-->
-                    本文最后更新于：2022年3月26日 下午
+                    本文最后更新于：2026年3月1日 下午
                   
                 
               </p>
@@ -342,7 +342,7 @@
 <p>客户端会使用 DNS 解析的 VIP 进行访问，到达 load balancer后，它首先会检查包的 destination address 以及 port number.如果其与 LVS service 相匹配，会根据调度算法从集群中选出一个 RS ，同时包的 destination address 和 port number 会使用 RS 的数据进行重写。包发送向选择的 RS 后，reply 会因为相应的路由规则送给 load balancer(网关)，在里面 source IP 会被重写为 VIP，保持了整个过程对 Client 的透明</p>
 <p><strong>Advantages</strong>:</p>
 <ul>
-<li>可以运行在任何支持 TCP/IP Protocol 的操作系统上（包括 Windows），且支持端口映射</li>
+<li>可以运行在任何支持 TCP&#x2F;IP Protocol 的操作系统上（包括 Windows），且支持端口映射</li>
 <li>只需要 一个 IP 地址供 load balancer 使用，load balancer 和 Cluster 通信可以使用内网 IP</li>
 </ul>
 <p><strong>Disadvantages:</strong></p>
@@ -364,7 +364,7 @@
 <li>需要 Server 支持 “IP Tunneling”(IP Encapsulation) protocol</li>
 <li>在国内 VIP 与后端服务器可能存在跨运营商的情况，有可能被运营商的策略认为是IP伪造请求而被拦截</li>
 </ul>
-<p><em>Note: 在VS/TUN 以及后面提到的 VS/DR clusters 中，VIP 被 load balancer 以及 RSs 同时共享，在一些情况下，load balancer 和一些 RSs 在同一个 网络中，如果 RS 也回应 arp 报文请求，会存在 race condition.报文将一会儿被送给 load balancer,一会送给某一 RS，另一会儿被送给另一 RS，LVS cluster 将无法正常工作。所以我们需要保证 RS （与 load balancer 同网络中的）不回复关于 VIP 的 arp 请求，但允许其处理 destination IP 为 VIP 的包</em></p>
+<p><em>Note: 在VS&#x2F;TUN 以及后面提到的 VS&#x2F;DR clusters 中，VIP 被 load balancer 以及 RSs 同时共享，在一些情况下，load balancer 和一些 RSs 在同一个 网络中，如果 RS 也回应 arp 报文请求，会存在 race condition.报文将一会儿被送给 load balancer,一会送给某一 RS，另一会儿被送给另一 RS，LVS cluster 将无法正常工作。所以我们需要保证 RS （与 load balancer 同网络中的）不回复关于 VIP 的 arp 请求，但允许其处理 destination IP 为 VIP 的包</em></p>
 <h4 id="DR"><a href="#DR" class="headerlink" title="DR"></a>DR</h4><p>工作流程图与 IP Tunneling 相仿，但是在实现上不同的是报文并未被再次封装，而是由 load balancer 直接路由给 RS（将报文目的 MAC 地址改为选中的 RS 的 MAC 地址）</p>
 <p><strong>Advantages:</strong></p>
 <ul>

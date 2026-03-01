@@ -31,7 +31,7 @@
 <meta property="og:image" content="https://flaglord.com/2021/07/31/Consistency-and-consensus/fig9-1.png">
 <meta property="og:image" content="https://flaglord.com/2021/07/31/Consistency-and-consensus/fig9-3.png">
 <meta property="article:published_time" content="2021-07-31T05:10:21.000Z">
-<meta property="article:modified_time" content="2022-03-26T09:39:35.675Z">
+<meta property="article:modified_time" content="2025-09-14T14:26:20.757Z">
 <meta property="article:author" content="flaglord">
 <meta property="article:tag" content="ACID">
 <meta property="article:tag" content="Distributes System">
@@ -290,7 +290,7 @@
                 
                   
                     <!-- compatible with older versions-->
-                    本文最后更新于：2022年3月26日 下午
+                    本文最后更新于：2025年9月14日 晚上
                   
                 
               </p>
@@ -299,7 +299,7 @@
               <div class="markdown-body">
                 
                 <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>在分布式系统中我们提到的 consistency 不同于 ACID 的 consistency (或者说是 correctness), 它描述了在 replicated database 中我们在某一时刻在不同的节点看到的数据状态应该是怎么样的。</p>
-<p>在最为理想的情况下，如果系统提供的是强一致性的保证，针对某一个数据项的更新操作成功后，那么所有的用户都可以立刻读取到更新后的值。但是许多分布式数据库系统为了性能考虑在默认情况下提供的都是 *eventual consistency(最终一致性)*，这表明数据库的不一致状态会<strong>暂时</strong>地持续一段时间，到最后会 <em>converge</em>，变为一致。</p>
+<p>在最为理想的情况下，如果系统提供的是强一致性的保证，针对某一个数据项的更新操作成功后，那么所有的用户都可以立刻读取到更新后的值。但是许多分布式数据库系统为了性能考虑在默认情况下提供的都是 <em>eventual consistency(最终一致性)</em>，这表明数据库的不一致状态会<strong>暂时</strong>地持续一段时间，到最后会 <em>converge</em>，变为一致。</p>
 <p>但是 DDIA 中提到这其实是个很弱的保证，因为它没有给出 <em><strong>when the convergence will happen</strong></em> ,所以说如果你写了一个值，立马去读取既有可能得到的是旧值，也有可能得到的是新值,从不一致到一致的时间差往往取决于 network delay，但如果 network delay unbounded,这其实是一件很麻烦的事情。</p>
 <h2 id="Linearizability"><a href="#Linearizability" class="headerlink" title="Linearizability"></a>Linearizability</h2><p> eventually consistent database 中，最大的困惑之处在于在某一时刻你去问不同的副本同一个数据项的值，你可能会得到两个不同的回答（主要原因可能是 replication lag,在更新的日志信息异步复制给其他副本时，一部分已经更新成功了，另一部分还没有收到更新信息）. 所以在这里引出了一个更强一点的一致性模型：<em>Linearizability (也称为 atomic consistency | strong consistency | immediate consistency | external consistency)</em> </p>
 <img src="/2021/07/31/Consistency-and-consensus/fig9-1.png" srcset="/img/loading.gif" lazyload class="" title="This system is not linearizable,causing football fans to be confused">
@@ -317,8 +317,7 @@
 <img src="/2021/07/31/Consistency-and-consensus/fig9-3.png" srcset="/img/loading.gif" lazyload class="" title="After any one read has returned the new value, all following reads (on the same or other clients) must also return the new value."></li>
 </ul>
 <p> Herlihy 和 Wing 在它们的<a target="_blank" rel="noopener" href="http://cs.brown.edu/~mph/HerlihyW90/p463-herlihy.pdf">论文</a>中更准确地描述了 Linearizability 的正式定义</p>
-<h3 id="Linearizability-versus-Serializability"><a href="#Linearizability-versus-Serializability" class="headerlink" title="Linearizability versus Serializability"></a>Linearizability versus Serializability</h3><p>这一点可以参考一下 Peter Bailis 的这篇文章<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="Linearizability versus Serializability
-">[1]</span></a></sup></p>
+<h3 id="Linearizability-versus-Serializability"><a href="#Linearizability-versus-Serializability" class="headerlink" title="Linearizability versus Serializability"></a>Linearizability versus Serializability</h3><p>这一点可以参考一下 Peter Bailis 的这篇文章<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="[Linearizability versus Serializability](http://www.bailis.org/blog/linearizability-versus-serializability/)">[1]</span></a></sup></p>
 <div class="note note-info">
             <p><em>Linearizability is a guarantee about <strong>single operations on single objects</strong>.</em> It provides a real-time (i.e., wall-clock) guarantee on the behavior of a set of single operations (often reads and writes) on a single object (e.g., distributed register or data item).</p>
           </div>
