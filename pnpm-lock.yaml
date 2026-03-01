@@ -8,15 +8,12 @@ importers:
 
   .:
     dependencies:
-      fs-extra:
-        specifier: ^11.3.3
-        version: 11.3.3
       hexo:
         specifier: ^8.1.1
-        version: 8.1.1(chokidar@3.6.0)
+        version: 8.1.1(chokidar@5.0.0)
       hexo-deployer-git:
         specifier: ^4.0.0
-        version: 4.0.0(chokidar@3.6.0)
+        version: 4.0.0(chokidar@5.0.0)
       hexo-generator-archive:
         specifier: ^2.0.0
         version: 2.0.0
@@ -28,7 +25,7 @@ importers:
         version: 4.0.0
       hexo-generator-sitemap:
         specifier: ^3.0.1
-        version: 3.0.1(chokidar@3.6.0)
+        version: 3.0.1(chokidar@5.0.0)
       hexo-generator-tag:
         specifier: ^2.0.0
         version: 2.0.0
@@ -52,14 +49,29 @@ importers:
         version: 1.0.4
       hexo-theme-fluid:
         specifier: ^1.9.8
-        version: 1.9.8(nunjucks@3.2.4(chokidar@3.6.0))
+        version: 1.9.8(nunjucks@3.2.4(chokidar@5.0.0))
     devDependencies:
+      chokidar:
+        specifier: ^5.0.0
+        version: 5.0.0
+      commander:
+        specifier: ^14.0.3
+        version: 14.0.3
+      fs-extra:
+        specifier: ^11.3.3
+        version: 11.3.3
       globby:
         specifier: ^16.1.1
         version: 16.1.1
+      marked:
+        specifier: ^17.0.3
+        version: 17.0.3
       sharp:
         specifier: ^0.34.5
         version: 0.34.5
+      ws:
+        specifier: ^8.19.0
+        version: 8.19.0
 
 packages:
 
@@ -350,12 +362,20 @@ packages:
     resolution: {integrity: sha512-Qgzu8kfBvo+cA4962jnP1KkS6Dop5NS6g7R5LFYJr4b8Ub94PPQXUksCw9PvXoeXPRRddRNC5C1JQUR2SMGtnA==}
     engines: {node: '>= 14.16.0'}
 
+  chokidar@5.0.0:
+    resolution: {integrity: sha512-TQMmc3w+5AxjpL8iIiwebF73dRDF4fBIieAqGn9RGCWaEVwQ6Fb2cGe31Yns0RRIzii5goJ1Y7xbMwo1TxMplw==}
+    engines: {node: '>= 20.19.0'}
+
   combined-stream@1.0.8:
     resolution: {integrity: sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==}
     engines: {node: '>= 0.8'}
 
   command-exists@1.2.9:
     resolution: {integrity: sha512-LTQ/SGc+s0Xc0Fu5WaKnR0YiygZkm9eKFvyS+fRsU7/ZWFF8ykFM6Pc9aCVf1+xasOOZpO3BAVgVrKvsqKHV7w==}
+
+  commander@14.0.3:
+    resolution: {integrity: sha512-H+y0Jo/T1RZ9qPP4Eh1pkcQcLRglraJaSLoyOtHxu6AapkjWVCy2Sit1QQ4x3Dng8qDlSsZEet7g5Pq06MvTgw==}
+    engines: {node: '>=20'}
 
   commander@5.1.0:
     resolution: {integrity: sha512-P0CysNDQ7rtVw4QIQtm+MRxV66vKFSvlsQvGYXZWR3qFU0jlMKHZZZgw8e+8DSah4UDKMqnknRDQz+xuQXQ/Zg==}
@@ -844,6 +864,11 @@ packages:
     engines: {node: '>= 18'}
     hasBin: true
 
+  marked@17.0.3:
+    resolution: {integrity: sha512-jt1v2ObpyOKR8p4XaUJVk3YWRJ5n+i4+rjQopxvV32rSndTJXvIzuUdWWIy/1pFQMkQmvTXawzDNqOH/CUmx6A==}
+    engines: {node: '>= 20'}
+    hasBin: true
+
   math-intrinsics@1.1.0:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
     engines: {node: '>= 0.4'}
@@ -1026,6 +1051,10 @@ packages:
   readdirp@4.1.2:
     resolution: {integrity: sha512-GDhwkLfywWL2s6vEjyhri+eXmfH6j1L7JE27WhqLeYzoh/A3DBaYGEj2H/HFZCn/kMfim73FXxEJTw06WtxQwg==}
     engines: {node: '>= 14.18.0'}
+
+  readdirp@5.0.0:
+    resolution: {integrity: sha512-9u/XQ1pvrQtYyMpZe7DXKv2p5CNvyVwzUB6uhLAnQwHMSgKMBR62lc7AHljaeteeHXn11XTAaLLUVZYVZyuRBQ==}
+    engines: {node: '>= 20.19.0'}
 
   resolve@1.22.11:
     resolution: {integrity: sha512-RfqAvLnMl313r7c9oclB1HhUEAezcpLjz95wFH4LVuhk9JF/r22qmVP9AMmOU4vMX7Q8pN8jwNg/CSpdFnMjTQ==}
@@ -1468,11 +1497,17 @@ snapshots:
     dependencies:
       readdirp: 4.1.2
 
+  chokidar@5.0.0:
+    dependencies:
+      readdirp: 5.0.0
+
   combined-stream@1.0.8:
     dependencies:
       delayed-stream: 1.0.0
 
   command-exists@1.2.9: {}
+
+  commander@14.0.3: {}
 
   commander@5.1.0: {}
 
@@ -1754,13 +1789,13 @@ snapshots:
       resolve: 1.22.11
       tildify: 2.0.0
 
-  hexo-deployer-git@4.0.0(chokidar@3.6.0):
+  hexo-deployer-git@4.0.0(chokidar@5.0.0):
     dependencies:
       bluebird: 3.7.2
       hexo-fs: 4.1.3
       hexo-util: 2.7.0
       luxon: 3.7.2
-      nunjucks: 3.2.4(chokidar@3.6.0)
+      nunjucks: 3.2.4(chokidar@5.0.0)
       picocolors: 1.1.1
     transitivePeerDependencies:
       - chokidar
@@ -1795,11 +1830,11 @@ snapshots:
     dependencies:
       hexo-pagination: 3.0.0
 
-  hexo-generator-sitemap@3.0.1(chokidar@3.6.0):
+  hexo-generator-sitemap@3.0.1(chokidar@5.0.0):
     dependencies:
       hexo-util: 2.7.0
       micromatch: 4.0.8
-      nunjucks: 3.2.4(chokidar@3.6.0)
+      nunjucks: 3.2.4(chokidar@5.0.0)
     transitivePeerDependencies:
       - chokidar
 
@@ -1857,9 +1892,9 @@ snapshots:
 
   hexo-simple-image@1.0.4: {}
 
-  hexo-theme-fluid@1.9.8(nunjucks@3.2.4(chokidar@3.6.0)):
+  hexo-theme-fluid@1.9.8(nunjucks@3.2.4(chokidar@5.0.0)):
     dependencies:
-      nunjucks: 3.2.4(chokidar@3.6.0)
+      nunjucks: 3.2.4(chokidar@5.0.0)
 
   hexo-util@2.7.0:
     dependencies:
@@ -1892,7 +1927,7 @@ snapshots:
       prismjs: 1.30.0
       strip-indent: 3.0.0
 
-  hexo@8.1.1(chokidar@3.6.0):
+  hexo@8.1.1(chokidar@5.0.0):
     dependencies:
       abbrev: 3.0.1
       bluebird: 3.7.2
@@ -1910,7 +1945,7 @@ snapshots:
       moize: 6.1.7
       moment: 2.30.1
       moment-timezone: 0.5.48
-      nunjucks: 3.2.4(chokidar@3.6.0)
+      nunjucks: 3.2.4(chokidar@5.0.0)
       picocolors: 1.1.1
       pretty-hrtime: 1.0.3
       strip-ansi: 7.2.0
@@ -2073,6 +2108,8 @@ snapshots:
 
   marked@15.0.12: {}
 
+  marked@17.0.3: {}
+
   math-intrinsics@1.1.0: {}
 
   merge2@1.4.1: {}
@@ -2148,13 +2185,13 @@ snapshots:
 
   normalize-path@3.0.0: {}
 
-  nunjucks@3.2.4(chokidar@3.6.0):
+  nunjucks@3.2.4(chokidar@5.0.0):
     dependencies:
       a-sync-waterfall: 1.0.1
       asap: 2.0.6
       commander: 5.1.0
     optionalDependencies:
-      chokidar: 3.6.0
+      chokidar: 5.0.0
 
   nwsapi@2.2.23: {}
 
@@ -2220,6 +2257,8 @@ snapshots:
       picomatch: 2.3.1
 
   readdirp@4.1.2: {}
+
+  readdirp@5.0.0: {}
 
   resolve@1.22.11:
     dependencies:

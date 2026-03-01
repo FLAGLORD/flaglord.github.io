@@ -7,13 +7,13 @@
     "clean": "hexo clean",
     "deploy": "hexo clean & hexo deploy -g",
     "server": "hexo server",
-    "webp": "node tools/webp-conv.js"
+    "webp": "node tools/webp-conv.js",
+    "watch": "node tools/watch-preview.js"
   },
   "hexo": {
     "version": "8.1.1"
   },
   "dependencies": {
-    "fs-extra": "^11.3.3",
     "hexo": "^8.1.1",
     "hexo-deployer-git": "^4.0.0",
     "hexo-generator-archive": "^2.0.0",
@@ -30,7 +30,12 @@
     "hexo-theme-fluid": "^1.9.8"
   },
   "devDependencies": {
+    "chokidar": "^5.0.0",
+    "commander": "^14.0.3",
+    "fs-extra": "^11.3.3",
     "globby": "^16.1.1",
-    "sharp": "^0.34.5"
+    "marked": "^17.0.3",
+    "sharp": "^0.34.5",
+    "ws": "^8.19.0"
   }
 }
